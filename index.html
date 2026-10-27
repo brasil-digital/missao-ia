@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Missão IA | Brasil Digital</title>
+<meta name="description" content="Jogo educativo gratuito para crianças e adolescentes aprenderem a lidar com a inteligência artificial: 8 fases, desafio final e certificado Brasil Digital.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://missaoia.brasildigital.online/">
+<meta property="og:title" content="Missão IA | Brasil Digital">
+<meta property="og:description" content="Jogo grátis para crianças e adolescentes aprenderem a lidar com a IA. 8 fases + certificado.">
+<meta property="og:image" content="https://missaoia.brasildigital.online/compartilhar.png">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta name="theme-color" content="#12324a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;800&display=swap">
+<style>
+/* Layout: uma tela de jogo centralizada (coluna de até 560px) sobre um "céu" azul com faixa verde e amarela; mapa de fases em trilha vertical; cada etapa é um cartão grande. Mundo único (claro) por escolha. */
+:root {
+  --ceu: #dff1ff;
+  --ceu-fundo: #bfe3fb;
+  --tinta: #12324a;
+  --tinta-suave: #4a6578;
+  --verde: #0f9d58;
+  --verde-escuro: #0b7a44;
+  --verde-claro: #e6f7ee;
+  --amarelo: #ffd23f;
+  --amarelo-claro: #fff6d6;
+  --azul: #1b6fd1;
+  --azul-escuro: #124f97;
+  --laranja: #e08a00;
+  --laranja-escuro: #a86700;
+  --erro: #d6453d;
+  --erro-claro: #fdeceb;
+  --cartao: #ffffff;
+  --linha: #cfe3f2;
+  --papel: #fffdf3;
+  --display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --texto: "Nunito", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  background: linear-gradient(180deg, var(--ceu) 0%, var(--ceu-fundo) 100%);
+  color: var(--tinta);
+  font-family: var(--texto);
+  font-size: 17px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 32px;
+}
+.faixa { height: 8px; border-radius: 99px; background: linear-gradient(90deg, var(--verde) 0 50%, var(--amarelo) 50% 100%); max-width: 560px; margin: 0 auto 16px; }
+main { max-width: 560px; margin: 0 auto; display: grid; gap: 16px; }
+header.topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.marca { font-family: var(--display); font-weight: 800; font-size: 1.35rem; line-height: 1; letter-spacing: .01em; background: none; color: var(--tinta); padding: 0; }
+.marca span { color: var(--verde); }
+.fase-tag { font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: var(--tinta); color: var(--amarelo); padding: 4px 10px; border-radius: 99px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cartao { background: var(--cartao); border-radius: 22px; padding: 22px; box-shadow: 0 6px 0 var(--linha), 0 14px 30px rgba(18, 50, 74, .10); display: grid; gap: 14px; min-width: 0; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.1; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 7vw, 2.6rem); }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.15rem; }
+p { margin: 0; }
+.suave { color: var(--tinta-suave); }
+.centro { text-align: center; }
+.bia { display: flex; gap: 12px; align-items: flex-start; }
+.bia-fala { background: var(--ceu); border-radius: 16px 16px 16px 4px; padding: 12px 14px; min-width: 0; }
+.bia-fala b { color: var(--azul); }
+canvas.robo { flex: 0 0 64px; width: 64px; height: 64px; }
+button { font: inherit; cursor: pointer; border: 0; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; }
+.idades { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.idade { background: var(--ceu); color: var(--tinta); border: 3px solid transparent; border-radius: 16px; padding: 12px 8px; font-weight: 800; display: grid; gap: 2px; }
+.idade small { font-weight: 600; color: var(--tinta-suave); }
+.idade[aria-pressed="true"] { border-color: var(--verde); background: var(--verde-claro); }
+.btn { background: var(--verde); color: #fff; font-family: var(--display); font-weight: 800; font-size: 1.2rem; padding: 12px 20px; border-radius: 16px; box-shadow: 0 5px 0 var(--verde-escuro); transition: transform .08s; }
+.btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--verde-escuro); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn.sec { background: var(--cartao); color: var(--tinta); box-shadow: 0 5px 0 var(--linha); border: 2px solid var(--linha); }
+.btn.peq { font-size: 1rem; padding: 8px 14px; }
+.link { background: none; color: var(--tinta-suave); text-decoration: underline; padding: 4px; font-size: .9rem; }
+.regras { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.regra { border-radius: 16px; padding: 12px; display: grid; gap: 4px; min-width: 0; }
+.regra.a { background: var(--verde-claro); }
+.regra.b { background: var(--amarelo-claro); }
+.regra b { font-family: var(--display); font-size: 1.05rem; }
+.placar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.barra { height: 12px; background: var(--linha); border-radius: 99px; overflow: hidden; }
+.barra i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--verde), var(--amarelo)); transition: width .3s; }
+.item { text-align: center; display: grid; gap: 8px; justify-items: center; }
+.item .figura { font-size: 4rem; line-height: 1; }
+.item h2 { font-size: 1.35rem; }
+.item .contexto { font-size: .8rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-suave); }
+.balao-ia { background: var(--ceu); border-radius: 16px 16px 16px 4px; padding: 14px; text-align: left; font-weight: 600; width: 100%; }
+.balao-ia small { display: block; font-weight: 800; color: var(--azul); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+.escolhas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.escolha { border-radius: 18px; padding: 14px 8px; font-family: var(--display); font-weight: 800; font-size: 1.2rem; line-height: 1.15; color: #fff; display: grid; gap: 2px; justify-items: center; text-align: center; }
+.escolha.a { background: var(--azul); box-shadow: 0 5px 0 var(--azul-escuro); }
+.escolha.b { background: var(--laranja); box-shadow: 0 5px 0 var(--laranja-escuro); }
+.escolha:active { transform: translateY(3px); }
+.escolha[disabled], .opcao[disabled] { cursor: default; }
+.escolha[disabled]:not(.marcada) { opacity: .45; }
+.opcoes { display: grid; gap: 10px; }
+.opcao { text-align: left; background: var(--ceu); color: var(--tinta); border: 3px solid var(--linha); border-radius: 16px; padding: 12px 14px; font-weight: 600; line-height: 1.35; }
+.opcao:hover:not([disabled]) { border-color: var(--azul); }
+.opcao.certa { border-color: var(--verde); background: var(--verde-claro); }
+.opcao.errada { border-color: var(--erro); background: var(--erro-claro); }
+.opcao[disabled]:not(.certa):not(.errada) { opacity: .55; }
+.resposta { border-radius: 16px; padding: 14px; display: grid; gap: 6px; }
+.resposta.certo { background: var(--verde-claro); }
+.resposta.errado { background: var(--erro-claro); }
+.resposta strong { font-family: var(--display); font-size: 1.2rem; }
+.resposta.certo strong { color: var(--verde-escuro); }
+.resposta.errado strong { color: var(--erro); }
+.pontos-ganhos { font-weight: 800; color: var(--verde-escuro); font-variant-numeric: tabular-nums; }
+.estrelas { font-size: 2.6rem; letter-spacing: .1em; text-align: center; color: var(--amarelo); text-shadow: 0 2px 0 #c99a00; line-height: 1.1; }
+.estrelas .vazia { color: var(--linha); text-shadow: none; }
+.total { text-align: center; font-family: var(--display); font-weight: 800; font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.revisao { display: grid; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.revisao li { background: var(--ceu); border-radius: 12px; padding: 10px 12px; }
+label { font-weight: 800; }
+input[type="text"] { width: 100%; font: inherit; font-size: 1.1rem; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--linha); color: var(--tinta); background: #fff; }
+.linha-botoes { display: flex; flex-wrap: wrap; gap: 10px; }
+.linha-botoes .btn { flex: 1 1 180px; }
+/* Mapa de fases */
+.resumo { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.resumo .num { font-family: var(--display); font-weight: 800; font-size: 1.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.trilha { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.parada { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 12px; background: var(--cartao); border-radius: 18px; padding: 12px; box-shadow: 0 4px 0 var(--linha); min-width: 0; }
+.parada .n { width: 52px; height: 52px; border-radius: 50%; display: grid; place-content: center; font-family: var(--display); font-weight: 800; font-size: 1.4rem; background: var(--ceu); color: var(--tinta); }
+.parada.feita .n { background: var(--verde); color: #fff; }
+.parada.chefe .n { background: var(--tinta); color: var(--amarelo); }
+.parada.travada { opacity: .55; }
+.parada .info { min-width: 0; display: grid; gap: 2px; }
+.parada .info b { font-family: var(--display); font-size: 1.1rem; line-height: 1.15; }
+.parada .info small { color: var(--tinta-suave); }
+.parada .mini { color: var(--amarelo); letter-spacing: .05em; text-shadow: 0 1px 0 #c99a00; }
+.parada .mini .vazia { color: var(--linha); text-shadow: none; }
+.confirma { background: var(--erro-claro); border-radius: 14px; padding: 12px; display: grid; gap: 10px; }
+/* Teste da IA (Fase 2) */
+.teste { display: grid; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.teste li { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; background: var(--ceu); border-radius: 14px; padding: 10px 12px; }
+.teste .f { font-size: 2rem; line-height: 1; }
+.teste .ok { font-weight: 800; white-space: nowrap; }
+.teste .ok.sim { color: var(--verde-escuro); }
+.teste .ok.nao { color: var(--erro); }
+/* Certificado */
+.certificado { border-radius: 22px; padding: 30px 22px 22px; background: var(--papel); border: 6px double var(--amarelo); display: grid; gap: 12px; text-align: center; position: relative; overflow: hidden; }
+.certificado::before { content: ""; position: absolute; inset: 0 0 auto; height: 10px; background: linear-gradient(90deg, var(--verde) 0 50%, var(--amarelo) 50% 100%); }
+.sobre { font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-suave); }
+.cert-titulo { font-family: var(--display); font-weight: 800; font-size: clamp(1.6rem, 6.5vw, 2.2rem); line-height: 1.05; color: var(--verde-escuro); }
+.nome { font-family: var(--display); font-weight: 800; font-size: clamp(1.7rem, 7vw, 2.3rem); line-height: 1.1; color: var(--tinta); overflow-wrap: anywhere; border-bottom: 2px solid var(--amarelo); padding-bottom: 4px; justify-self: center; max-width: 100%; }
+.cert-fases { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.cert-fases span { font-size: .78rem; font-weight: 800; background: var(--verde-claro); color: var(--verde-escuro); border-radius: 99px; padding: 3px 9px; }
+.rodape-cert { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 2px dashed var(--linha); padding-top: 12px; text-align: left; }
+.selo { width: 78px; height: 78px; border-radius: 50%; background: var(--tinta); color: var(--amarelo); display: grid; place-content: center; text-align: center; font-family: var(--display); font-weight: 800; line-height: 1; font-size: .74rem; border: 4px double var(--amarelo); flex: 0 0 auto; }
+.selo b { display: block; font-size: 1rem; color: #fff; }
+.patrocinio { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--tinta-suave); }
+.patrocinio img { width: 34px; height: 34px; border-radius: 9px; }
+.codigo { font-family: ui-monospace, Consolas, monospace; font-size: .78rem; color: var(--tinta-suave); }
+footer.pais { max-width: 560px; margin: 8px auto 0; font-size: .88rem; color: var(--tinta-suave); display: grid; gap: 6px; }
+footer.pais b { color: var(--tinta); }
+@media (max-width: 400px) { .regras { grid-template-columns: 1fr; } .cartao { padding: 18px; } .escolha { font-size: 1.05rem; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.pula { animation: pula .35s ease-out; }
+@keyframes pula { 0% { transform: scale(.95); } 60% { transform: scale(1.02); } 100% { transform: scale(1); } }
+[hidden] { display: none !important; }
+.logo-inicio { justify-self: center; width: 150px; background: var(--tinta); border-radius: 24px; padding: 10px; }
+.selo-logo { width: 96px; height: 96px; background: var(--tinta); border-radius: 18px; padding: 6px; display: grid; place-items: center; flex: 0 0 auto; }
+.selo-logo img { width: 100%; height: auto; display: block; }
+footer.pais a { color: var(--azul); font-weight: 800; }
+</style>
+</head>
+<body>
+
+<div class="faixa" aria-hidden="true"></div>
+<main id="app" aria-live="polite"></main>
+<footer class="pais">
+  <p><b>Para pais e professores:</b> a Missão IA é um jogo do projeto Brasil Digital para crianças e adolescentes aprenderem a lidar com a inteligência artificial em 8 fases e um desafio final. O progresso fica salvo só neste aparelho e o nome digitado no certificado não é enviado para lugar nenhum.</p>
+  <p>Um projeto <a href="https://brasildigital.online" target="_blank" rel="noopener">Brasil Digital</a>, moldando o futuro digital com segurança para todos. Oferecimento: app Fala Brasil, grátis na App Store e no Google Play.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const ICONE = "icone-fala-brasil.png";
+
+/* ---------- Conteúdo das fases ----------
+   bin: dois botões (a/b); c = resposta certa ("a" ou "b").  mc: múltipla escolha; certa = índice em o.
+   e = explicação para todos; t = versão para 13 a 17 anos (opcional). */
+const FASES = [
+  {
+    id: 1, nome: "IA ou não IA?", resumo: "Descubra o que é inteligência artificial",
+    intro: {
+      k: "<b>IA aprende com exemplos</b> e tenta adivinhar coisas novas. Um <b>programa comum</b> só segue regras fixas, sempre do mesmo jeito.",
+      t: "<b>IA</b> é um sistema que <b>aprende padrões a partir de dados</b> e usa isso para prever ou decidir em situações novas. Um <b>programa tradicional</b> só executa <b>regras fixas</b> escritas por alguém."
+    },
+    regras: [["🤖 É IA", "Aprende com exemplos e se adapta."], ["⚙️ Não é IA", "Segue regras fixas, sempre igual."]],
+    blocos: [{ tipo: "bin", n: 10, a: ["🤖 É IA", "aprende"], b: ["⚙️ Não é IA", "regra fixa"], itens: [
+      { c: "a", fig: "🎵", q: "App que recomenda vídeos e músicas pra você", e: "É IA! Ele aprende com o que você assiste e tenta adivinhar do que você vai gostar.", t: "É IA. Sistemas de recomendação aprendem padrões do seu histórico para prever o que vai prender sua atenção. Por isso o feed parece te conhecer." },
+      { c: "a", fig: "🗣️", q: "Assistente de voz que entende o que você fala", e: "É IA! Ela aprendeu a entender a voz de milhões de pessoas diferentes.", t: "É IA. O reconhecimento de fala foi treinado com muitas horas de áudio, por isso entende sotaques e jeitos diferentes de falar." },
+      { c: "a", fig: "📱", q: "Celular que desbloqueia reconhecendo seu rosto", e: "É IA! O celular aprendeu como é o seu rosto e te reconhece até de óculos.", t: "É IA. O reconhecimento facial compara o seu rosto com um modelo aprendido, mesmo com luz diferente, óculos ou boné." },
+      { c: "a", fig: "🌐", q: "Tradutor que lê uma placa pela câmera e traduz", e: "É IA! Ela reconhece as letras na foto e traduz para outra língua.", t: "É IA. Duas IAs trabalham juntas: uma lê o texto na imagem e outra traduz, aprendendo com milhões de textos." },
+      { c: "a", fig: "💬", q: "Chatbot que responde suas perguntas escrevendo", e: "É IA! Ele aprendeu com muitos textos a escrever respostas. Mas atenção: às vezes ele erra!", t: "É IA. Modelos de linguagem aprendem com enormes quantidades de texto e geram respostas, que podem soar certas e estar erradas." },
+      { c: "a", fig: "🐱", q: "Filtro que coloca orelhas de gato que seguem seu rosto", e: "É IA! Ela acha onde estão seus olhos, nariz e boca, mesmo quando você mexe a cabeça.", t: "É IA. A detecção de rosto localiza pontos do seu rosto em tempo real para o filtro acompanhar seus movimentos." },
+      { c: "a", fig: "📧", q: "Filtro que manda mensagem de golpe para o spam", e: "É IA! Ela aprendeu com muitas mensagens de golpe a reconhecer as parecidas.", t: "É IA. Filtros de spam aprendem com exemplos de golpes e de mensagens normais e calculam a chance de uma mensagem nova ser golpe." },
+      { c: "b", fig: "🧮", q: "Calculadora", e: "Não é IA. Ela segue regras fixas de matemática: 2 + 2 dá 4 sempre, sem aprender nada.", t: "Não é IA. A calculadora executa regras fixas. A mesma conta dá sempre o mesmo resultado e ela não aprende com o uso." },
+      { c: "b", fig: "⏰", q: "Despertador programado para tocar às 7h", e: "Não é IA. Ele só faz o que foi mandado: tocar às 7h. Não aprende que você é dorminhoco!", t: "Não é IA. É uma regra simples, se der 7h então toca. Não há aprendizado com dados." },
+      { c: "b", fig: "💡", q: "Lâmpada com interruptor", e: "Não é IA. Apertou, acende. Apertou de novo, apaga. Sem pensar nada!", t: "Não é IA. Um circuito liga e desliga. Não há decisão nem aprendizado." },
+      { c: "b", fig: "🚦", q: "Semáforo que troca de cor a cada 30 segundos", e: "Não é IA. Ele troca de cor no tempo marcado, tenha carro ou não.", t: "Não é IA. Funciona com tempo fixo. Existem semáforos inteligentes que usam câmeras e IA, mas este só segue o relógio." },
+      { c: "b", fig: "📺", q: "Controle remoto da TV", e: "Não é IA. Cada botão manda sempre o mesmo sinal para a TV.", t: "Não é IA. Cada botão envia um código fixo por infravermelho. Nada é aprendido." },
+      { c: "b", fig: "🍿", q: "Micro-ondas com timer de 2 minutos", e: "Não é IA. Ele esquenta pelo tempo que você marcou e apita. Só isso!", t: "Não é IA. Executa a instrução que você deu, tempo e potência, sem tomar decisões próprias." }
+    ] }]
+  },
+  {
+    id: 2, nome: "Treinador de IA", resumo: "Ensine uma IA a separar frutas",
+    intro: {
+      k: "Agora <b>você é quem ensina</b>! Vou te mostrar frutas e você me diz se estão <b>boas</b> ou <b>estragadas</b>. Depois a IA vai tentar sozinha, usando o que aprendeu com você.",
+      t: "Você vai <b>rotular dados de treino</b>: cada fruta que você classificar vira um exemplo para a IA. Depois ela vai classificar frutas que nunca viu. <b>A qualidade dos seus rótulos decide o desempenho dela.</b>"
+    },
+    regras: [["😋 Boa", "Firme, bonita, sem mofo."], ["🤢 Estragada", "Com mofo, manchas ou mole demais."]],
+    blocos: [
+      { tipo: "bin", n: 6, ordemFixa: true, treino: true, ctx: "Exemplo para a IA", a: ["😋 Boa", "pra comer"], b: ["🤢 Estragada", "não coma"], itens: [
+        { c: "a", m: 0, fig: "🍎", q: "Maçã vermelha, firme e brilhante", e: "Boa! Você ensinou: fruta sem mancha e firme é boa." },
+        { c: "b", m: 1, fig: "🍌", q: "Banana com mofo e muito mole", e: "Estragada! Você ensinou: mofo é sinal de fruta estragada." },
+        { c: "a", m: 0, fig: "🍐", q: "Pera verdinha e firme", e: "Boa! Mais um exemplo de fruta saudável para a IA." },
+        { c: "b", m: 1, fig: "🍊", q: "Laranja com mofo branco", e: "Estragada! A IA está aprendendo a reparar no mofo." },
+        { c: "b", m: 1, fig: "🍓", q: "Morango com bolinhas de mofo", e: "Estragada! Quanto mais exemplos certos, melhor a IA fica." },
+        { c: "a", m: 0, fig: "🍇", q: "Uva roxa, firme e sem manchas", e: "Boa! Pronto: a IA já tem 6 exemplos seus." }
+      ] },
+      { tipo: "testeIA", testes: [
+        { m: 1, fig: "🍑", q: "Pêssego com mofo" },
+        { m: 0, fig: "🥭", q: "Manga cheirosa e firme" },
+        { m: 1, fig: "🍋", q: "Limão com mofo verde" },
+        { m: 0, fig: "🍏", q: "Maçã verde e brilhante" }
+      ] },
+      { tipo: "mc", itens: [
+        { q: "Para uma IA aprender bem, ela precisa de...", o: ["Poucos exemplos", "Muitos exemplos certos e variados", "Exemplos com erros"], certa: 1, e: "Isso! IA boa precisa de muitos exemplos, certos e de vários tipos.", t: "Exato. Dados em quantidade, corretos e diversos são a base de qualquer modelo." },
+        { q: "Se alguém ensinar a IA que fruta com mofo é boa, o que acontece?", o: ["A IA descobre sozinha a verdade", "A IA passa a achar que fruta estragada é boa", "A IA para de funcionar"], certa: 1, e: "Isso! A IA só sabe o que ensinaram para ela. Exemplo errado vira resposta errada.", t: "Isso. Rótulos errados geram um modelo errado. Em computação se diz: lixo entra, lixo sai." },
+        { q: "Quem ensina a IA?", o: ["Ela já nasce sabendo tudo", "Pessoas e os dados que elas escolhem", "Ninguém, ela aprende do nada"], certa: 1, e: "Isso! Por trás de toda IA tem pessoas escolhendo os exemplos.", t: "Isso. Pessoas escolhem os dados, os rótulos e os objetivos. Por isso a responsabilidade é humana." }
+      ] }
+    ]
+  },
+  {
+    id: 3, nome: "Pergunte bem", resumo: "Aprenda a pedir ajuda para a IA",
+    intro: {
+      k: "A IA responde melhor quando você <b>explica direitinho</b> o que quer: o assunto, para quem é e como quer a resposta.",
+      t: "O pedido que você escreve para a IA se chama <b>prompt</b>. Um bom prompt diz <b>o objetivo, o contexto e o formato</b> da resposta, e nunca precisa de dados pessoais."
+    },
+    regras: [["✅ Pedido bom", "Assunto + para quem + formato."], ["❌ Pedido fraco", "Curto demais ou confuso."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "Você quer estudar o sistema solar para a prova do 5º ano. Qual pedido é melhor?", o: ["planetas", "Me explica os 8 planetas do sistema solar de um jeito simples, para uma prova do 5º ano, com um exemplo de cada.", "Fala tudo sobre o espaço"], certa: 1, e: "Isso! Ele diz o assunto, para quem é e como você quer a resposta." },
+      { q: "Você quer ideias de presente para a sua avó, que ama plantas, gastando até 50 reais.", o: ["presente", "o que é bom de dar?", "Me dá 5 ideias de presente de até 50 reais para a minha avó, que adora plantas."], certa: 2, e: "Isso! Com o gosto da avó e o valor, a IA acerta muito mais." },
+      { q: "A resposta da IA veio difícil demais. O que fazer?", o: ["Desistir", "Pedir: explica de novo com palavras mais simples e um exemplo do dia a dia", "Perguntar a mesma coisa igualzinha"], certa: 1, e: "Isso! Você pode conversar com a IA e pedir ajustes até entender." },
+      { q: "Qual destes pedidos é mais seguro?", o: ["Meu nome é Ana e moro na Rua das Flores, 10. Qual escola fica perto?", "Quais cuidados devo ter ao andar sozinho até a escola?", "Minha senha é 1234, ela é boa?"], certa: 1, e: "Isso! Dá para pedir ajuda sem contar nome, endereço ou senha." },
+      { q: "Você quer saber se uma notícia é verdadeira. O que fazer?", o: ["Perguntar para a IA e acreditar direto", "Compartilhar logo no grupo da família", "Pedir para a IA explicar e depois conferir em sites confiáveis ou com um adulto"], certa: 2, e: "Isso! A IA ajuda a entender, mas a confirmação vem de fontes confiáveis." },
+      { q: "Você vai fazer um trabalho sobre um livro. Qual pedido te ajuda a aprender?", o: ["Escreve meu trabalho sobre o livro", "Faz um resumo em 5 tópicos com os temas principais do livro, para eu revisar antes de escrever o meu trabalho", "Resume"], certa: 1, e: "Isso! Você usa a IA para revisar e escreve o trabalho com as suas palavras.", t: "Isso. Objetivo claro (revisar), formato definido (5 tópicos) e o trabalho continua sendo seu." }
+    ] }]
+  },
+  {
+    id: 4, nome: "A IA também erra", resumo: "Ache as respostas inventadas",
+    intro: {
+      k: "A IA às vezes <b>inventa coisas</b> e fala com muita certeza, como se fosse verdade. Vamos treinar seu olho de detetive!",
+      t: "Quando a IA gera uma informação falsa com confiança, chamamos de <b>alucinação</b>. Ela prevê palavras prováveis, e o provável nem sempre é o verdadeiro. <b>Sempre confira o que é importante.</b>"
+    },
+    regras: [["✅ Está certo", "A informação é verdadeira."], ["🚩 Está errado", "A IA inventou ou se confundiu."]],
+    blocos: [{ tipo: "bin", n: 8, ctx: "A IA respondeu:", balao: true, a: ["✅ Está certo", "verdade"], b: ["🚩 Está errado", "inventou"], itens: [
+      { c: "a", q: "O Brasil tem 26 estados e o Distrito Federal.", e: "Certo! São 26 estados mais o Distrito Federal, onde fica Brasília." },
+      { c: "b", q: "Santos Dumont inventou o telefone.", e: "Errado! O telefone é atribuído a Graham Bell (e ao italiano Antonio Meucci). Santos Dumont ficou famoso pelo avião 14-Bis." },
+      { c: "b", q: "A capital da Austrália é Sydney.", e: "Errado! A capital é Canberra. Sydney é a cidade mais famosa, e a IA pode confundir as duas." },
+      { c: "a", q: "A água ferve a 100 °C ao nível do mar.", e: "Certo! Em lugares bem altos, como montanhas, ela ferve com um pouco menos." },
+      { c: "b", q: "Os morcegos são cegos.", e: "Errado! Morcegos enxergam. Muitos também usam o eco dos sons para se localizar no escuro." },
+      { c: "b", q: "A Lua tem luz própria.", e: "Errado! A Lua reflete a luz do Sol. Por isso a gente vê as fases dela." },
+      { c: "a", q: "O coração humano tem 4 cavidades.", e: "Certo! São 2 átrios e 2 ventrículos." },
+      { c: "a", q: "Os portugueses chegaram ao Brasil em 1500.", e: "Certo! A frota de Pedro Álvares Cabral chegou em abril de 1500." },
+      { c: "b", q: "O maior planeta do sistema solar é a Terra.", e: "Errado! O maior é Júpiter. Cabem mais de mil Terras dentro dele." },
+      { c: "b", q: "Peixinhos-dourados só lembram das coisas por 3 segundos.", e: "Errado! Isso é um mito. Estudos mostram que eles lembram de coisas por meses." }
+    ] }]
+  },
+  {
+    id: 5, nome: "Real ou fake?", resumo: "Proteja-se de golpes e imagens falsas",
+    intro: {
+      k: "Hoje a IA consegue <b>imitar vozes e criar fotos e vídeos falsos</b>. Golpistas usam isso. Vamos aprender a desconfiar na hora certa!",
+      t: "<b>Deepfakes</b> são vídeos, áudios e imagens criados ou alterados por IA. Golpes usam pressa, emoção e pedidos de dinheiro ou códigos. <b>Pare, confira por outro canal e só depois aja.</b>"
+    },
+    regras: [["👍 Seguro", "Fonte conhecida, sem pressa, sem pedir nada."], ["🚨 Suspeito", "Pressa, dinheiro, código ou promessa boa demais."]],
+    blocos: [{ tipo: "bin", n: 8, a: ["👍 Seguro", "pode confiar"], b: ["🚨 Suspeito", "desconfie"], itens: [
+      { c: "b", fig: "📲", q: "Mensagem: \"Oi mãe, troquei de número. Me manda um PIX urgente?\"", e: "Suspeito! É um golpe muito comum. Ligue para o número antigo da pessoa antes de qualquer coisa." },
+      { c: "b", fig: "🎬", q: "Vídeo de um famoso prometendo dinheiro grátis para quem clicar num link", e: "Suspeito! Pode ser um vídeo falso feito com IA. Famoso de verdade não distribui dinheiro por link." },
+      { c: "b", fig: "🎙️", q: "Áudio com a voz do seu primo pedindo o código que chegou no seu celular", e: "Suspeito! A IA consegue copiar vozes. Código que chega por SMS nunca se passa para ninguém." },
+      { c: "b", fig: "🦈", q: "Foto de um tubarão nadando numa rua alagada, viralizando no grupo", e: "Suspeito! Fotos assim costumam ser montagens. Procure a fonte antes de compartilhar." },
+      { c: "a", fig: "🏫", q: "Aviso da reunião de pais no aplicativo oficial da escola", e: "Seguro! Vem do canal oficial e não pede dinheiro nem senha." },
+      { c: "b", fig: "🎁", q: "Site \"celular-gratis-agora.xyz\" pedindo seus dados para você ganhar um celular", e: "Suspeito! Promessa boa demais e site estranho pedindo dados: é golpe." },
+      { c: "a", fig: "👩‍🏫", q: "Sua professora avisa na sala que a prova mudou de data", e: "Seguro! Você ouviu da própria pessoa, cara a cara." },
+      { c: "b", fig: "🖐️", q: "Foto de uma pessoa famosa com 6 dedos numa mão", e: "Suspeito! Mãos estranhas, textos borrados e detalhes esquisitos são sinais de imagem feita por IA." },
+      { c: "a", fig: "📰", q: "Notícia que aparece do mesmo jeito em vários jornais conhecidos", e: "Seguro! Quando várias fontes confiáveis contam a mesma coisa, a chance de ser verdade é maior.", t: "Seguro. Confirmação por fontes independentes e conhecidas é o melhor teste contra notícia falsa." },
+      { c: "b", fig: "👤", q: "Perfil novo \"da sua escola\" pedindo fotos e endereço dos alunos", e: "Suspeito! Escola não pede endereço por perfil novo. Avise um adulto." }
+    ] }]
+  },
+  {
+    id: 6, nome: "Meus dados, meu tesouro", resumo: "Saiba o que nunca contar",
+    intro: {
+      k: "Seus <b>dados pessoais</b> são um tesouro: senha, endereço, onde você está. Alguns você pode contar, outros <b>nunca</b>, nem para uma IA!",
+      t: "Tudo o que você digita num app ou numa IA pode ficar guardado. <b>Dados que identificam ou localizam você</b> merecem proteção, e a lei (LGPD) também protege você."
+    },
+    regras: [["🙂 Pode contar", "Gostos e dúvidas gerais."], ["🔒 Guarde segredo", "O que identifica ou localiza você."]],
+    blocos: [{ tipo: "bin", n: 8, ctx: "Contar para um app ou IA:", a: ["🙂 Pode contar", "tranquilo"], b: ["🔒 Segredo", "não conte"], itens: [
+      { c: "b", fig: "🔑", q: "Sua senha", e: "Segredo! Senha é só sua. Nem amigo, nem app, nem IA." },
+      { c: "a", fig: "🎨", q: "Sua cor favorita", e: "Pode contar! Gosto pessoal não coloca você em perigo." },
+      { c: "b", fig: "🏠", q: "Seu endereço", e: "Segredo! Endereço mostra onde encontrar você." },
+      { c: "b", fig: "🔢", q: "Código que chegou por SMS", e: "Segredo! Com esse código, outra pessoa pode entrar na sua conta." },
+      { c: "a", fig: "📺", q: "Seu desenho animado favorito", e: "Pode contar! Isso ajuda a IA a dar exemplos que você curte." },
+      { c: "b", fig: "🪪", q: "Foto do seu documento", e: "Segredo! Com ela alguém pode se passar por você." },
+      { c: "b", fig: "📍", q: "Onde você está agora", e: "Segredo! Localização em tempo real é só para a família." },
+      { c: "a", fig: "⚽", q: "Que você gosta de futebol", e: "Pode contar! É um gosto, não um dado que te localiza." },
+      { c: "b", fig: "🎒", q: "Nome da sua escola e o horário em que você sai", e: "Segredo! Junto, isso diz onde e quando te achar." },
+      { c: "a", fig: "🔬", q: "Uma dúvida sobre a matéria de ciências", e: "Pode contar! Tirar dúvidas é um ótimo uso da IA." }
+    ] }]
+  },
+  {
+    id: 7, nome: "IA justa", resumo: "Entenda quando a IA é injusta",
+    intro: {
+      k: "Se a IA aprender com exemplos que <b>não mostram todo mundo</b>, ela pode ser <b>injusta</b> com algumas pessoas. Vamos descobrir como isso acontece.",
+      t: "Quando os dados de treino são desequilibrados, a IA reproduz esse desequilíbrio. Isso se chama <b>viés</b>. Decisões importantes feitas por IA precisam de <b>revisão humana</b>."
+    },
+    regras: [["⚖️ Justa", "Aprende com exemplos de todo mundo."], ["⚠️ Com viés", "Aprende só com uma parte das pessoas."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "Uma IA de reconhecer rostos aprendeu quase só com fotos de pessoas de pele clara. O que pode acontecer?", o: ["Funcionar igual para todo mundo", "Errar mais com pessoas de pele escura", "Ficar mais rápida"], certa: 1, e: "Isso! Se os exemplos não mostram todo mundo, a IA aprende de um jeito injusto. Isso se chama viés." },
+      { q: "Você pede para uma IA desenhar \"um cientista\" e ela sempre desenha um homem de jaleco. Por quê?", o: ["Porque só homens são cientistas", "Porque ela aprendeu com imagens que mostravam mais homens", "Porque a IA não gosta de mulheres"], certa: 1, e: "Isso! A IA repete o que viu nos exemplos. Cientistas são homens e mulheres de todos os jeitos." },
+      { q: "Como deixar uma IA mais justa?", o: ["Treinar com exemplos de pessoas de todos os tipos e testar com todas elas", "Usar menos exemplos", "Nunca testar a IA"], certa: 0, e: "Isso! Exemplos variados e testes com todo mundo diminuem o viés." },
+      { q: "Uma IA que escolhe quem ganha bolsa de estudos só escolhe alunos de um bairro. O que fazer?", o: ["Aceitar, porque a IA não erra", "Pedir que pessoas revisem as decisões e descubram o motivo", "Desligar a internet da escola"], certa: 1, e: "Isso! Decisões importantes precisam de pessoas conferindo." },
+      { q: "Qual frase sobre IA é verdadeira?", o: ["A IA é sempre neutra", "A IA pensa igualzinho a uma pessoa", "A IA pode repetir preconceitos que estavam nos exemplos"], certa: 2, e: "Isso! Por isso a gente precisa olhar com atenção o que a IA responde." }
+    ] }]
+  },
+  {
+    id: 8, nome: "Estudar sem colar", resumo: "Use a IA para aprender de verdade",
+    intro: {
+      k: "A IA pode ser uma <b>ótima professora particular</b>. Mas se ela fizer a lição por você, quem aprende é ela, não você!",
+      t: "Usar IA para <b>entender, treinar e revisar</b> ajuda a aprender. Usar para <b>entregar pronto</b> é plágio. Combine com o professor quando a IA pode ser usada e <b>diga que usou</b>."
+    },
+    regras: [["📚 Ajuda a aprender", "Explica, treina, corrige."], ["🙈 É colar", "Faz por você ou na hora proibida."]],
+    blocos: [{ tipo: "bin", n: 8, a: ["📚 Aprender", "uso bom"], b: ["🙈 Colar", "não vale"], itens: [
+      { c: "b", fig: "📝", q: "Pedir para a IA escrever a redação inteira e entregar como sua", e: "É colar! Você não aprende a escrever e engana o professor." },
+      { c: "a", fig: "🍕", q: "Pedir para a IA explicar frações de outro jeito", e: "Aprender! Uma explicação diferente pode fazer tudo fazer sentido." },
+      { c: "a", fig: "💡", q: "Pedir ideias e depois escrever com as suas palavras", e: "Aprender! As ideias ajudam, mas o texto e o pensamento são seus." },
+      { c: "b", fig: "📋", q: "Copiar a resposta da lição sem nem ler", e: "É colar! Na prova você vai estar sem a resposta." },
+      { c: "a", fig: "❓", q: "Pedir para a IA fazer um quiz para treinar para a prova", e: "Aprender! Treinar com perguntas é um jeito ótimo de estudar." },
+      { c: "a", fig: "✏️", q: "Pedir para a IA corrigir seu texto e explicar os erros", e: "Aprender! Entender os erros é como você melhora." },
+      { c: "b", fig: "🚫", q: "Usar IA durante a prova quando o professor proibiu", e: "É colar! Regra combinada tem que ser respeitada." },
+      { c: "b", fig: "⏩", q: "Pedir a resposta do exercício sem tentar antes", e: "É colar! Tente primeiro. Se travar, peça uma dica, não a resposta." },
+      { c: "a", fig: "📖", q: "Perguntar o significado de uma palavra difícil do livro", e: "Aprender! É como ter um dicionário que explica com exemplos." }
+    ] }]
+  }
+];
+const CHEFE = { id: 9, nome: "Desafio final", resumo: "Misture tudo o que aprendeu" };
+const TOTAL_FASES = FASES.length;
+const ETAPAS = TOTAL_FASES + 1;
+const CHEFE_POR_FASE = { 1: 1, 2: 1, 3: 2, 4: 1, 5: 2, 6: 2, 7: 2, 8: 1 };
+
+/* ---------- Estado ---------- */
+const CHAVE = "missaoia_v2";
+function carregar() { try { return JSON.parse(localStorage.getItem(CHAVE) || "null"); } catch (e) { return null; } }
+function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify({ idade: estado.idade, fases: estado.fases })); } catch (e) {} }
+const guardado = carregar() || {};
+let estado = {
+  tela: guardado.idade ? "mapa" : "inicio", idade: guardado.idade || null, fases: guardado.fases || {},
+  fase: null, rodadas: [], i: 0, pontos: 0, seq: 0, acertos: 0, total: 0, erros: [], respondido: false, treino: [],
+  nome: "", confirmaZerar: false
+};
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const expl = it => esc(estado.idade === "t" && it.t ? it.t : it.e);
+function embaralhar(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function rodadaBin(b, it) { return { tipo: "bin", it, a: b.a, b: b.b, ctx: b.ctx, balao: b.balao, treino: b.treino }; }
+function rodadaMc(it) { return { tipo: "mc", it, ordem: embaralhar(it.o.map((txt, i) => ({ txt, i }))) }; }
+function montarRodadas(f) {
+  const r = [];
+  for (const b of f.blocos) {
+    if (b.tipo === "bin") {
+      let itens = b.ordemFixa ? b.itens.slice() : embaralhar(b.itens);
+      if (!b.ordemFixa && b.n < itens.length) {
+        const as = itens.filter(x => x.c === "a"), bs = itens.filter(x => x.c === "b");
+        const na = Math.min(as.length, Math.ceil(b.n / 2)), nb = b.n - na;
+        itens = embaralhar(as.slice(0, na).concat(bs.slice(0, nb)));
+      }
+      itens.forEach(it => r.push(rodadaBin(b, it)));
+    } else if (b.tipo === "mc") {
+      embaralhar(b.itens).forEach(it => r.push(rodadaMc(it)));
+    } else if (b.tipo === "testeIA") {
+      r.push({ tipo: "testeIA", testes: b.testes });
+    }
+  }
+  return r;
+}
+function montarChefe() {
+  const r = [];
+  FASES.forEach(f => {
+    const pool = [];
+    f.blocos.forEach(b => {
+      if (b.tipo === "bin" && !b.treino) b.itens.forEach(it => pool.push(rodadaBin(b, it)));
+      if (b.tipo === "mc") b.itens.forEach(it => pool.push(rodadaMc(it)));
+    });
+    embaralhar(pool).slice(0, CHEFE_POR_FASE[f.id]).forEach(x => { x.origem = f.nome; r.push(x); });
+  });
+  return embaralhar(r);
+}
+
+/* ---------- Peças visuais ---------- */
+function topo(tag) {
+  return `<header class="topo"><button class="marca" id="ir-mapa" aria-label="Voltar ao mapa">Missão <span>IA</span></button>${tag ? `<div class="fase-tag">${tag}</div>` : ""}</header>`;
+}
+function bia(html) {
+  return `<div class="bia"><canvas class="robo" width="128" height="128" aria-hidden="true"></canvas><div class="bia-fala">${html}</div></div>`;
+}
+function estrelasHtml(n, classe = "estrelas") {
+  return `<div class="${classe}" aria-label="${n} de 3 estrelas">${[0, 1, 2].map(i => i < n ? "★" : '<span class="vazia">★</span>').join("")}</div>`;
+}
+function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function desenharRobos() {
+  document.querySelectorAll("canvas.robo").forEach(c => {
+    const g = c.getContext("2d"); g.clearRect(0, 0, 128, 128);
+    g.fillStyle = "#12324a"; g.fillRect(61, 6, 6, 18);
+    g.fillStyle = "#ffd23f"; g.beginPath(); g.arc(64, 8, 8, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#1b6fd1"; rr(g, 16, 24, 96, 80, 26); g.fill();
+    g.fillStyle = "#dff1ff"; rr(g, 28, 40, 72, 44, 18); g.fill();
+    g.fillStyle = "#12324a"; g.beginPath(); g.arc(50, 60, 8, 0, Math.PI * 2); g.arc(78, 60, 8, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#fff"; g.beginPath(); g.arc(53, 57, 3, 0, Math.PI * 2); g.arc(81, 57, 3, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "#0f9d58"; g.lineWidth = 5; g.lineCap = "round"; g.beginPath(); g.arc(64, 70, 12, .2 * Math.PI, .8 * Math.PI); g.stroke();
+    g.fillStyle = "#0f9d58"; rr(g, 4, 52, 12, 26, 6); g.fill(); rr(g, 112, 52, 12, 26, 6); g.fill();
+  });
+}
+function ligarTopo() { const b = document.getElementById("ir-mapa"); if (b) b.onclick = () => { if (estado.idade) { estado.tela = "mapa"; render(); } }; }
+
+/* ---------- Progresso ---------- */
+const prog = id => estado.fases[id] || { pts: 0, est: 0 };
+const passou = id => prog(id).est >= 1;
+const liberada = id => id === 1 || passou(id - 1);
+const totalPontos = () => Object.values(estado.fases).reduce((s, f) => s + (f.pts || 0), 0);
+const totalEstrelas = () => Object.values(estado.fases).reduce((s, f) => s + (f.est || 0), 0);
+const completou = () => passou(CHEFE.id);
+
+/* ---------- Telas ---------- */
+function telaInicio() {
+  app.innerHTML = topo() + `
+  <section class="cartao pula">
+    <img class="logo-inicio" src="logo-brasil-digital.png" alt="Brasil Digital">
+    <h1>Missão IA</h1>
+    ${bia("Oi! Eu sou a <b>Bia</b>, sua guia. São <b>8 fases e um desafio final</b> para você aprender a lidar com a inteligência artificial. Quem completar tudo ganha um <b>certificado Brasil Digital</b> com o seu nome!")}
+    <p class="suave">Escolha sua idade para começar:</p>
+    <div class="idades" role="group" aria-label="Idade">
+      <button class="idade" id="idade-k" aria-pressed="${estado.idade === "k"}">8 a 12 anos<small>Exploradores</small></button>
+      <button class="idade" id="idade-t" aria-pressed="${estado.idade === "t"}">13 a 17 anos<small>Agentes</small></button>
+    </div>
+    <button class="btn" id="comecar" ${estado.idade ? "" : "disabled"}>Começar a missão</button>
+  </section>`;
+  desenharRobos();
+  document.getElementById("idade-k").onclick = () => { estado.idade = "k"; salvar(); telaInicio(); };
+  document.getElementById("idade-t").onclick = () => { estado.idade = "t"; salvar(); telaInicio(); };
+  document.getElementById("comecar").onclick = () => { estado.tela = "mapa"; render(); };
+}
+
+function telaMapa() {
+  const feitas = FASES.filter(f => passou(f.id)).length + (completou() ? 1 : 0);
+  const paradas = FASES.map(f => ({ ...f })).concat([{ ...CHEFE, chefe: true }]);
+  app.innerHTML = topo(`${feitas} de ${ETAPAS} feitas`) + `
+  <section class="cartao">
+    <div class="resumo">
+      <div><div class="sobre">Nível 1 · Fundamentos</div><div class="num">${totalPontos()} pts</div><small class="suave">${totalEstrelas()} de ${ETAPAS * 3} estrelas</small></div>
+      <div class="suave" style="text-align:right">Trilha <b>${estado.idade === "t" ? "Agentes (13 a 17)" : "Exploradores (8 a 12)"}</b><br><button class="link" id="trocar-idade">trocar idade</button></div>
+    </div>
+    <div class="barra" aria-hidden="true"><i style="width:${(feitas / ETAPAS) * 100}%"></i></div>
+    ${completou() ? `<button class="btn" id="ver-cert">Ver meu certificado</button>` : bia(feitas === 0 ? "Comece pela <b>Fase 1</b>. Cada fase libera a próxima quando você ganha pelo menos 1 estrela." : "Continue! Faltam <b>" + (ETAPAS - feitas) + "</b> para o certificado.")}
+  </section>
+  <ol class="trilha">
+    ${paradas.map(p => {
+      const lib = p.chefe ? FASES.every(f => passou(f.id)) : liberada(p.id);
+      const pr = prog(p.id);
+      return `<li class="parada ${pr.est ? "feita" : ""} ${p.chefe ? "chefe" : ""} ${lib ? "" : "travada"}">
+        <div class="n" aria-hidden="true">${p.chefe ? "★" : p.id}</div>
+        <div class="info"><b>${esc(p.nome)}</b><small>${esc(p.resumo)}</small>${pr.est ? estrelasHtml(pr.est, "mini") : ""}</div>
+        <button class="btn peq ${pr.est ? "sec" : ""}" data-fase="${p.id}" ${lib ? "" : "disabled"} aria-label="${lib ? (pr.est ? "Jogar de novo" : "Jogar") : "Bloqueada"}: ${esc(p.nome)}">${lib ? (pr.est ? "Rejogar" : "Jogar") : "🔒"}</button>
+      </li>`;
+    }).join("")}
+  </ol>
+  <section class="cartao">
+    <h3>Em breve: Nível 2</h3>
+    <p class="suave">Depois dos Fundamentos vêm novos níveis, com fases mais desafiadoras: criar com IA, programar uma IA simples, IA no trabalho e na cidade. Quem tem o certificado do Nível 1 começa na frente!</p>
+  </section>
+  <section class="cartao">
+    ${estado.confirmaZerar ? `<div class="confirma"><p><b>Apagar todo o progresso deste aparelho?</b> As estrelas e os pontos voltam a zero.</p><div class="linha-botoes"><button class="btn sec peq" id="zerar-nao">Cancelar</button><button class="btn peq" id="zerar-sim" style="background:var(--erro);box-shadow:0 5px 0 #9e2f29">Apagar progresso</button></div></div>`
+      : `<button class="link" id="zerar">Começar tudo de novo (outra criança vai jogar)</button>`}
+  </section>`;
+  ligarTopo();
+  desenharRobos();
+  document.querySelectorAll("[data-fase]").forEach(b => b.onclick = () => abrirFase(Number(b.dataset.fase)));
+  document.getElementById("trocar-idade").onclick = () => { estado.tela = "inicio"; render(); };
+  const vc = document.getElementById("ver-cert"); if (vc) vc.onclick = () => { estado.tela = "certificado"; render(); };
+  const z = document.getElementById("zerar"); if (z) z.onclick = () => { estado.confirmaZerar = true; telaMapa(); };
+  const zn = document.getElementById("zerar-nao"); if (zn) zn.onclick = () => { estado.confirmaZerar = false; telaMapa(); };
+  const zs = document.getElementById("zerar-sim"); if (zs) zs.onclick = () => { estado.fases = {}; estado.nome = ""; estado.confirmaZerar = false; estado.idade = null; salvar(); estado.tela = "inicio"; render(); };
+}
+
+function abrirFase(id) {
+  estado.fase = id;
+  estado.confirmaZerar = false;
+  estado.tela = "intro";
+  render();
+}
+function faseAtual() { return estado.fase === CHEFE.id ? null : FASES.find(f => f.id === estado.fase); }
+function tagFase() { return estado.fase === CHEFE.id ? "Desafio final" : `Fase ${estado.fase} de ${TOTAL_FASES}`; }
+
+function telaIntro() {
+  const f = faseAtual();
+  const chefe = !f;
+  app.innerHTML = topo(tagFase()) + `
+  <section class="cartao pula">
+    <h2>${esc(chefe ? CHEFE.nome : f.nome)}</h2>
+    ${chefe ? bia("Chegou a hora! O <b>desafio final</b> mistura perguntas de todas as fases. Ganhe pelo menos 1 estrela para conquistar o seu <b>certificado</b>.") : bia(f.intro[estado.idade])}
+    ${chefe ? "" : `<div class="regras">${f.regras.map((r, i) => `<div class="regra ${i ? "b" : "a"}"><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join("")}</div>`}
+    <p class="suave">Acertos seguidos valem pontos extras!</p>
+    <div class="linha-botoes"><button class="btn sec" id="voltar">Mapa</button><button class="btn" id="vamos">Vamos lá!</button></div>
+  </section>`;
+  ligarTopo();
+  desenharRobos();
+  document.getElementById("voltar").onclick = () => { estado.tela = "mapa"; render(); };
+  document.getElementById("vamos").onclick = () => {
+    const rodadas = chefe ? montarChefe() : montarRodadas(f);
+    Object.assign(estado, { tela: "jogo", rodadas, i: 0, pontos: 0, seq: 0, acertos: 0, erros: [], respondido: false, treino: [],
+      total: rodadas.filter(r => r.tipo !== "testeIA").length });
+    render();
+  };
+}
+
+function telaJogo() {
+  const r = estado.rodadas[estado.i];
+  if (r.tipo === "testeIA") return telaTesteIA(r);
+  const n = estado.rodadas.slice(0, estado.i).filter(x => x.tipo !== "testeIA").length;
+  let corpo;
+  if (r.tipo === "bin") {
+    const it = r.it;
+    const ctx = r.origem || r.ctx;
+    corpo = `
+      <div class="item pula">
+        ${ctx ? `<div class="contexto">${esc(ctx)}</div>` : ""}
+        ${r.balao ? `<div class="balao-ia"><small>🤖 IA</small>${esc(it.q)}</div>` : `${it.fig ? `<div class="figura" aria-hidden="true">${it.fig}</div>` : ""}<h2>${esc(it.q)}</h2>`}
+      </div>
+      <div class="escolhas">
+        <button class="escolha a" id="r-a">${esc(r.a[0])}<small>${esc(r.a[1])}</small></button>
+        <button class="escolha b" id="r-b">${esc(r.b[0])}<small>${esc(r.b[1])}</small></button>
+      </div>`;
+  } else {
+    corpo = `
+      <div class="item pula">${r.origem ? `<div class="contexto">${esc(r.origem)}</div>` : ""}<h2>${esc(r.it.q)}</h2></div>
+      <div class="opcoes">${r.ordem.map(o => `<button class="opcao" data-i="${o.i}">${esc(o.txt)}</button>`).join("")}</div>`;
+  }
+  app.innerHTML = topo(tagFase()) + `
+  <section class="cartao">
+    <div class="placar"><span>Desafio ${n + 1} de ${estado.total}</span><span id="pts">⭐ ${estado.pontos} pts</span></div>
+    <div class="barra" aria-hidden="true"><i style="width:${(n / estado.total) * 100}%"></i></div>
+    ${corpo}
+    <div id="feedback"></div>
+  </section>`;
+  ligarTopo();
+  if (r.tipo === "bin") {
+    document.getElementById("r-a").onclick = () => responder(r.it.c === "a", "a");
+    document.getElementById("r-b").onclick = () => responder(r.it.c === "b", "b");
+  } else {
+    document.querySelectorAll(".opcao").forEach(b => b.onclick = () => responder(Number(b.dataset.i) === r.it.certa, b));
+  }
+}
+
+function responder(certo, escolha) {
+  if (estado.respondido) return;
+  estado.respondido = true;
+  const r = estado.rodadas[estado.i];
+  if (r.treino) estado.treino.push({ m: r.it.m, c: escolha });
+  let ganho = 0;
+  if (certo) { estado.seq++; estado.acertos++; ganho = 100 + (estado.seq - 1) * 20; estado.pontos += ganho; }
+  else { estado.seq = 0; estado.erros.push(r.it); }
+  if (r.tipo === "bin") {
+    ["a", "b"].forEach(k => { const b = document.getElementById("r-" + k); b.disabled = true; if (k === escolha) b.classList.add("marcada"); });
+  } else {
+    document.querySelectorAll(".opcao").forEach(b => {
+      b.disabled = true;
+      const i = Number(b.dataset.i);
+      if (i === r.it.certa) b.classList.add("certa");
+      else if (b === escolha) b.classList.add("errada");
+    });
+  }
+  const ultimo = estado.i === estado.rodadas.length - 1;
+  const proximoTeste = !ultimo && estado.rodadas[estado.i + 1].tipo === "testeIA";
+  const msg = r.treino && !certo ? "Ops! A resposta certa era a outra. Atenção: a IA vai aprender do jeito que você ensinou, até o erro!" : expl(r.it);
+  document.getElementById("feedback").innerHTML = `
+    <div class="resposta ${certo ? "certo" : "errado"} pula">
+      <strong>${certo ? "Acertou!" : "Quase!"}</strong>
+      <p>${msg}</p>
+      ${certo ? `<span class="pontos-ganhos">+${ganho} pontos${estado.seq > 1 ? ` · ${estado.seq} seguidos!` : ""}</span>` : ""}
+    </div>
+    <button class="btn" id="proximo" style="margin-top:12px;width:100%">${ultimo ? "Ver resultado" : proximoTeste ? "Testar a IA" : "Próximo desafio"}</button>`;
+  document.getElementById("pts").textContent = `⭐ ${estado.pontos} pts`;
+  const b = document.getElementById("proximo");
+  b.focus({ preventScroll: true });
+  b.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  b.onclick = avancar;
+}
+function avancar() {
+  estado.respondido = false;
+  if (estado.i === estado.rodadas.length - 1) estado.tela = "fim"; else estado.i++;
+  render();
+}
+
+function telaTesteIA(r) {
+  // A "IA" decide pela maioria do que a criança ensinou para frutas com e sem mofo.
+  const prever = m => {
+    const ex = estado.treino.filter(t => t.m === m);
+    const a = ex.filter(t => t.c === "a").length, b = ex.length - a;
+    return a === b ? null : a > b ? "a" : "b";
+  };
+  const linhas = r.testes.map(t => { const p = prever(t.m); return { ...t, p, ok: p === (t.m ? "b" : "a") }; });
+  const acertosIA = linhas.filter(l => l.ok).length;
+  const fala = acertosIA === linhas.length
+    ? "Você treinou muito bem! A IA <b>nunca tinha visto essas frutas</b> e acertou todas, porque aprendeu com os seus exemplos."
+    : "A IA errou algumas porque <b>aprendeu com exemplos errados</b>. Uma IA só é tão boa quanto os dados que recebe.";
+  app.innerHTML = topo(tagFase()) + `
+  <section class="cartao pula">
+    <h2>Hora do teste da IA</h2>
+    ${bia(fala)}
+    <ul class="teste">
+      ${linhas.map(l => `<li><span class="f" aria-hidden="true">${l.fig}</span><span>${esc(l.q)}<br><small class="suave">A IA disse: <b>${l.p === "a" ? "😋 Boa" : l.p === "b" ? "🤢 Estragada" : "🤷 Não sei"}</b></small></span><span class="ok ${l.ok ? "sim" : "nao"}">${l.ok ? "✔ certo" : "✘ errou"}</span></li>`).join("")}
+    </ul>
+    <p class="centro"><b>A IA acertou ${acertosIA} de ${linhas.length}.</b></p>
+    <button class="btn" id="seguir">Continuar</button>
+  </section>`;
+  ligarTopo();
+  desenharRobos();
+  document.getElementById("seguir").onclick = avancar;
+}
+
+function calcEstrelas() {
+  const p = estado.total ? estado.acertos / estado.total : 0;
+  return p >= .9 ? 3 : p >= .7 ? 2 : p >= .5 ? 1 : 0;
+}
+
+function telaFim() {
+  const n = calcEstrelas();
+  const id = estado.fase;
+  const antes = prog(id);
+  const recorde = antes.pts > 0 && estado.pontos > antes.pts;
+  estado.fases[id] = { pts: Math.max(antes.pts, estado.pontos), est: Math.max(antes.est, n) };
+  salvar();
+  const chefe = id === CHEFE.id;
+  const ganhouCert = chefe && n >= 1;
+  const frase = n === 3 ? "Incrível! Você mandou muito bem." : n === 2 ? "Muito bem! Falta pouco para 3 estrelas." : n === 1 ? "Boa! Você passou." : "Quase! Tente de novo, a Bia acredita em você.";
+  const proxima = !chefe && n >= 1 && id < TOTAL_FASES ? FASES[id] : null;
+  const irFinal = !chefe && n >= 1 && id === TOTAL_FASES && FASES.every(f => passou(f.id));
+  app.innerHTML = topo(tagFase()) + `
+  <section class="cartao pula">
+    <h2 class="centro">${n >= 1 ? "Concluído!" : "Tente de novo"}</h2>
+    <p class="centro suave">${esc(chefe ? CHEFE.nome : faseAtual().nome)}</p>
+    ${estrelasHtml(n)}
+    <div class="total">${estado.pontos}<span style="font-size:1rem"> pts</span></div>
+    <p class="centro">${estado.acertos} de ${estado.total} acertos. ${frase}${recorde ? " <b>Novo recorde!</b>" : ""}</p>
+    ${estado.erros.length ? `<div><p><b>Para revisar:</b></p><ul class="revisao">${estado.erros.map(e => `<li><b>${esc(e.q)}</b><br>${expl(e)}</li>`).join("")}</ul></div>` : ""}
+    <div class="linha-botoes">
+      <button class="btn sec" id="denovo">Jogar de novo</button>
+      ${ganhouCert ? `<button class="btn" id="cert">Pegar meu certificado</button>`
+        : proxima ? `<button class="btn" id="prox">Fase ${proxima.id}: ${esc(proxima.nome)}</button>`
+        : irFinal ? `<button class="btn" id="final">Ir para o desafio final</button>`
+        : `<button class="btn" id="mapa">Ver o mapa</button>`}
+    </div>
+  </section>`;
+  ligarTopo();
+  document.getElementById("denovo").onclick = () => abrirFase(id);
+  const c = document.getElementById("cert"); if (c) c.onclick = () => { estado.tela = "certificado"; render(); };
+  const p = document.getElementById("prox"); if (p) p.onclick = () => abrirFase(proxima.id);
+  const fi = document.getElementById("final"); if (fi) fi.onclick = () => abrirFase(CHEFE.id);
+  const m = document.getElementById("mapa"); if (m) m.onclick = () => { estado.tela = "mapa"; render(); };
+}
+
+function codigoCert() {
+  const base = `${estado.nome}|${totalPontos()}|${estado.idade}`;
+  let h = 7; for (const ch of base) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return "BD-MIA-" + h.toString(36).toUpperCase().padStart(7, "0").slice(-7);
+}
+
+function telaCertificado() {
+  if (!completou()) { estado.tela = "mapa"; return render(); }
+  if (!estado.nome) {
+    app.innerHTML = topo("Certificado") + `
+    <section class="cartao pula">
+      <h2>Parabéns, missão cumprida!</h2>
+      ${bia("Você completou <b>todas as fases</b> da Missão IA! Digite seu nome do jeito que quer que apareça no certificado.")}
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" maxlength="50" autocomplete="off" placeholder="Ex.: Maria Eduarda Silva">
+      <p class="suave" style="font-size:.88rem">O nome aparece só nesta tela. Nada é enviado.</p>
+      <button class="btn" id="gerar" disabled>Gerar certificado</button>
+    </section>`;
+    ligarTopo();
+    desenharRobos();
+    const inp = document.getElementById("nome"), g = document.getElementById("gerar");
+    inp.oninput = () => { g.disabled = inp.value.trim().length < 2; };
+    inp.onkeydown = e => { if (e.key === "Enter" && !g.disabled) g.click(); };
+    g.onclick = () => { estado.nome = inp.value.trim(); telaCertificado(); };
+    return;
+  }
+  const est = totalEstrelas();
+  const nivel = est >= 24 ? "Ouro" : est >= 17 ? "Prata" : "Bronze";
+  const data = new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
+  app.innerHTML = topo("Certificado") + `
+  <section class="certificado pula" id="cert" aria-label="Certificado Missão IA">
+    <div class="sobre">Projeto Brasil Digital</div>
+    <div class="cert-titulo">Certificado<br>Missão IA</div>
+    <p>Certificamos que</p>
+    <div class="nome">${esc(estado.nome)}</div>
+    <p class="sobre" style="margin:0">Nível 1 · Fundamentos</p>
+    <p>concluiu as <b>8 fases e o desafio final</b> da Missão IA, aprendendo a reconhecer, usar e questionar a inteligência artificial com segurança e responsabilidade.</p>
+    <div class="cert-fases">${FASES.map(f => `<span>${esc(f.nome)}</span>`).join("")}</div>
+    ${estrelasHtml(nivel === "Ouro" ? 3 : nivel === "Prata" ? 2 : 1)}
+    <p>Nível <b>${nivel}</b> · ${totalPontos()} pontos · ${est} de ${ETAPAS * 3} estrelas<br>Trilha ${estado.idade === "t" ? "Agentes (13 a 17 anos)" : "Exploradores (8 a 12 anos)"}</p>
+    <p class="suave">${data}</p>
+    <div class="rodape-cert">
+      <div class="selo-logo"><img src="logo-brasil-digital.png" alt="Selo Brasil Digital"></div>
+      <div style="display:grid;gap:6px;min-width:0">
+        <div class="patrocinio"><img src="${ICONE}" alt="Ícone do app Fala Brasil"><span>Oferecimento<br><b style="color:var(--tinta)">app Fala Brasil</b></span></div>
+        <span class="codigo">${codigoCert()}</span>
+      </div>
+    </div>
+  </section>
+  <section class="cartao">
+    ${bia("Baixe o certificado em PDF e mostre para a família e a escola! Você pode rejogar qualquer fase para ganhar mais estrelas e subir de nível.")}
+    <button class="btn" id="baixar-pdf">Baixar certificado em PDF</button>
+    <p class="suave centro" id="pdf-status" hidden></p>
+    <div class="linha-botoes"><button class="btn sec" id="trocar-nome">Corrigir o nome</button><button class="btn sec" id="voltar-mapa">Voltar ao mapa</button></div>
+  </section>`;
+  ligarTopo();
+  desenharRobos();
+  document.getElementById("trocar-nome").onclick = () => { estado.nome = ""; telaCertificado(); };
+  document.getElementById("baixar-pdf").onclick = baixarPdf;
+  document.getElementById("voltar-mapa").onclick = () => { estado.tela = "mapa"; render(); };
+}
+
+async function baixarPdf() {
+  const st = document.getElementById("pdf-status"), b = document.getElementById("baixar-pdf");
+  st.hidden = false; st.textContent = "Gerando o PDF..."; b.disabled = true;
+  try {
+    const el = document.getElementById("cert");
+    el.classList.remove("pula");
+    const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#fffdf3", useCORS: true });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const W = 210, H = 297, m = 12;
+    let w = W - 2 * m, h = w * canvas.height / canvas.width;
+    if (h > H - 2 * m) { h = H - 2 * m; w = h * canvas.width / canvas.height; }
+    pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (W - w) / 2, (H - h) / 2, w, h);
+    const arq = "Certificado-Missao-IA-" + estado.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".pdf";
+    pdf.save(arq);
+    st.textContent = "Pronto! O PDF foi baixado.";
+  } catch (e) {
+    st.textContent = "Não deu para gerar o PDF neste aparelho. Tire um print da tela.";
+  }
+  b.disabled = false;
+}
+
+function render() {
+  ({ inicio: telaInicio, mapa: telaMapa, intro: telaIntro, jogo: telaJogo, fim: telaFim, certificado: telaCertificado })[estado.tela]();
+  window.scrollTo({ top: 0 });
+}
+
+function start(salvo) {
+  if (salvo && salvo.tela) estado = Object.assign(estado, salvo);
+  if (estado.tela === "fim") estado.tela = "mapa";
+  render();
+}
+start({});
+</script>
+</body>
+</html>
