@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Missão IA | Brasil Digital</title>
-<meta name="description" content="Jogo educativo gratuito para crianças e adolescentes aprenderem a lidar com a inteligência artificial: 8 fases, desafio final e certificado Brasil Digital.">
+<meta name="description" content="Jogo educativo gratuito para crianças e adolescentes aprenderem a lidar com a inteligência artificial: níveis com fases, desafio final, certificado Brasil Digital e uma Missão do Mês nova.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://missaoia.brasildigital.online/">
 <meta property="og:title" content="Missão IA | Brasil Digital">
-<meta property="og:description" content="Jogo grátis para crianças e adolescentes aprenderem a lidar com a IA. 8 fases + certificado.">
+<meta property="og:description" content="Jogo grátis para crianças e adolescentes aprenderem a lidar com a IA. 2 níveis, certificados e Missão do Mês.">
 <meta property="og:image" content="https://missaoia.brasildigital.online/compartilhar.png">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
@@ -175,6 +175,26 @@ footer.pais b { color: var(--tinta); }
 .selo-logo { width: 96px; height: 96px; background: var(--tinta); border-radius: 18px; padding: 6px; display: grid; place-items: center; flex: 0 0 auto; }
 .selo-logo img { width: 100%; height: auto; display: block; }
 footer.pais a { color: var(--azul); font-weight: 800; }
+/* Níveis (abas do mapa) */
+.niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.nivel-aba { background: var(--cartao); color: var(--tinta); border: 3px solid var(--linha); border-radius: 16px; padding: 8px 6px; font-weight: 800; line-height: 1.15; display: grid; gap: 2px; justify-items: center; text-align: center; font-size: .92rem; }
+.nivel-aba small { font-weight: 600; color: var(--tinta-suave); font-size: .78rem; }
+.nivel-aba[aria-pressed="true"] { border-color: var(--verde); background: var(--verde-claro); }
+.nivel-aba[disabled] { opacity: .55; cursor: not-allowed; }
+.novo { display: inline-block; background: var(--amarelo); color: var(--tinta); font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; border-radius: 99px; padding: 1px 7px; }
+.selos { display: flex; flex-wrap: wrap; gap: 8px; }
+.selo-mes { display: grid; justify-items: center; gap: 2px; background: var(--amarelo-claro); border-radius: 14px; padding: 8px 10px; font-size: .78rem; font-weight: 800; text-align: center; min-width: 88px; }
+.selo-mes .ic { font-size: 1.8rem; line-height: 1; }
+.selo-mes.vazio { background: var(--ceu); color: var(--tinta-suave); }
+/* Programe uma IA (sensores do robô) */
+.sensores { display: grid; gap: 10px; }
+.sensor { text-align: left; background: var(--ceu); color: var(--tinta); border: 3px solid var(--linha); border-radius: 16px; padding: 12px 14px; display: grid; gap: 2px; }
+.sensor b { font-family: var(--display); font-size: 1.15rem; }
+.sensor small { color: var(--tinta-suave); }
+.sensor:hover:not([disabled]) { border-color: var(--azul); }
+.sensor.certa { border-color: var(--verde); background: var(--verde-claro); }
+.sensor.errada { border-color: var(--erro); background: var(--erro-claro); }
+.sensor[disabled]:not(.certa):not(.errada) { opacity: .55; cursor: default; }
 </style>
 </head>
 <body>
@@ -182,7 +202,7 @@ footer.pais a { color: var(--azul); font-weight: 800; }
 <div class="faixa" aria-hidden="true"></div>
 <main id="app" aria-live="polite"></main>
 <footer class="pais">
-  <p><b>Para pais e professores:</b> a Missão IA é um jogo do projeto Brasil Digital para crianças e adolescentes aprenderem a lidar com a inteligência artificial em 8 fases e um desafio final. O progresso fica salvo só neste aparelho e o nome digitado no certificado não é enviado para lugar nenhum.</p>
+  <p><b>Para pais e professores:</b> a Missão IA é um jogo do projeto Brasil Digital para crianças e adolescentes aprenderem a lidar com a inteligência artificial. São níveis de 8 fases e um desafio final, cada um com o seu certificado, e uma Missão do Mês nova sobre as novidades da IA. O progresso fica salvo só neste aparelho e o nome digitado no certificado não é enviado para lugar nenhum.</p>
   <p>Um projeto <a href="https://brasildigital.online" target="_blank" rel="noopener">Brasil Digital</a>, moldando o futuro digital com segurança para todos. Oferecimento: app Fala Brasil, grátis na App Store e no Google Play.</p>
 </footer>
 
@@ -193,8 +213,9 @@ const ICONE = "icone-fala-brasil.png";
 
 /* ---------- Conteúdo das fases ----------
    bin: dois botões (a/b); c = resposta certa ("a" ou "b").  mc: múltipla escolha; certa = índice em o.
-   e = explicação para todos; t = versão para 13 a 17 anos (opcional). */
-const FASES = [
+   e = explicação para todos; t = versão para 13 a 17 anos (opcional).
+   Os ids são únicos entre níveis (Nível 1: 1–9, Nível 2: 11–19, Missões do Mês: 101+) porque o progresso é salvo por id. */
+const FASES_N1 = [
   {
     id: 1, nome: "IA ou não IA?", resumo: "Descubra o que é inteligência artificial",
     intro: {
@@ -358,18 +379,222 @@ const FASES = [
     ] }]
   }
 ];
-const CHEFE = { id: 9, nome: "Desafio final", resumo: "Misture tudo o que aprendeu" };
-const TOTAL_FASES = FASES.length;
-const ETAPAS = TOTAL_FASES + 1;
-const CHEFE_POR_FASE = { 1: 1, 2: 1, 3: 2, 4: 1, 5: 2, 6: 2, 7: 2, 8: 1 };
+
+const FASES_N2 = [
+  {
+    id: 11, nome: "Criar com IA", resumo: "Crie com IA do jeito honesto",
+    intro: {
+      k: "A IA ajuda a criar <b>desenhos, histórias e músicas</b>. Criar com IA é legal, desde que você <b>conte que usou</b> e <b>respeite o trabalho dos outros</b>.",
+      t: "Ferramentas de <b>IA generativa</b> criam textos, imagens, áudios e vídeos. Usar é ótimo, com duas regras: <b>transparência</b> (dizer que usou IA) e <b>respeito</b> a quem criou a obra original e às pessoas retratadas."
+    },
+    regras: [["✅ Honesto", "Conta que usou IA e respeita os outros."], ["🚫 Não é honesto", "Engana, copia ou expõe alguém."]],
+    blocos: [{ tipo: "bin", n: 8, a: ["✅ Honesto", "pode criar"], b: ["🚫 Não é honesto", "não faça"], itens: [
+      { c: "a", fig: "🎨", q: "Criar um desenho com IA e contar que foi feito com IA", e: "Honesto! Quem vê o desenho sabe como ele foi feito." },
+      { c: "b", fig: "🏆", q: "Inscrever num concurso de desenho uma imagem feita pela IA, dizendo que você desenhou", e: "Não é honesto! O concurso é para desenhos feitos à mão. Isso engana os jurados e os outros participantes." },
+      { c: "a", fig: "🎵", q: "Pedir para a IA ideias de rima e depois escrever a sua própria música", e: "Honesto! A IA deu ideias, mas a música é sua." },
+      { c: "b", fig: "🖼️", q: "Pedir para a IA copiar igualzinho o desenho de um artista para vender", e: "Não é honesto! O desenho tem dono. Copiar para vender desrespeita quem criou.", t: "Não é honesto. Obras têm autor e são protegidas por direitos autorais. Copiar o estilo e a obra de alguém para lucrar desrespeita o artista e pode ser ilegal." },
+      { c: "b", fig: "😂", q: "Criar com IA uma foto engraçada de um colega e espalhar no grupo sem ele saber", e: "Não é honesto! Montagem de alguém sem permissão pode humilhar a pessoa. Isso é cyberbullying.", t: "Não é honesto. Montagem com o rosto de alguém sem consentimento expõe e humilha, é cyberbullying e pode ter consequências na escola e na Justiça." },
+      { c: "a", fig: "📚", q: "Fazer as ilustrações do trabalho com IA e escrever \"imagens feitas com IA\" embaixo", e: "Honesto! Avisar que as imagens são de IA é o jeito certo." },
+      { c: "a", fig: "🎮", q: "Usar IA para inventar personagens para um jogo que você está criando", e: "Honesto! A IA ajuda na imaginação e o jogo continua sendo criação sua." },
+      { c: "b", fig: "🗣️", q: "Usar IA para imitar a voz de um famoso dizendo coisas que ele nunca disse", e: "Não é honesto! Fingir que alguém falou algo engana as pessoas e pode prejudicar quem foi imitado." },
+      { c: "a", fig: "✏️", q: "Escrever um rascunho, pedir sugestões para a IA e decidir o que mudar", e: "Honesto! Você continua sendo o autor e decide o que fica." },
+      { c: "b", fig: "📝", q: "Copiar um texto da IA e dizer para o professor que escreveu sozinho", e: "Não é honesto! Se usou IA, conte. Combinar com o professor é sempre o caminho." }
+    ] }]
+  },
+  {
+    id: 12, nome: "Programe uma IA", resumo: "Monte um robô que separa o lixo",
+    intro: {
+      k: "Agora você vai <b>programar um robô</b> que separa o lixo! O segredo é escolher <b>o que o robô vai observar</b> em cada objeto. Escolha o sensor certo e veja o robô trabalhar.",
+      t: "Para decidir, uma IA usa <b>características</b> dos dados (em inglês, <i>features</i>). Escolher a característica que tem <b>relação de verdade</b> com a resposta é metade do trabalho de quem programa IA."
+    },
+    regras: [["♻️ Reciclável", "Plástico, metal, vidro e papel."], ["🍌 Orgânico", "Restos de comida e de plantas."]],
+    blocos: [
+      { tipo: "sensor", certo: "mat",
+        q: "Qual sensor o robô deve usar para separar o lixo?",
+        sensores: [
+          { k: "cor", nome: "🎨 Cor", desc: "Vê a cor do objeto", regra: "Robô aprendeu: colorido vai para o orgânico; cinza ou transparente, para o reciclável." },
+          { k: "tam", nome: "📏 Tamanho", desc: "Mede se é grande ou pequeno", regra: "Robô aprendeu: grande vai para o reciclável; pequeno, para o orgânico." },
+          { k: "mat", nome: "🔬 Material", desc: "Descobre do que o objeto é feito", regra: "Robô aprendeu: plástico, metal, vidro e papel vão para o reciclável; comida e plantas, para o orgânico." }
+        ],
+        itens: [
+          { fig: "🥫", q: "Lata de refrigerante vermelha", c: "a", p: { cor: "b", tam: "b" } },
+          { fig: "🍌", q: "Casca de banana", c: "b", p: { cor: "b", tam: "b" } },
+          { fig: "📰", q: "Jornal velho", c: "a", p: { cor: "a", tam: "a" } },
+          { fig: "🍎", q: "Maçã mordida", c: "b", p: { cor: "b", tam: "b" } },
+          { fig: "🍾", q: "Garrafa de vidro verde", c: "a", p: { cor: "b", tam: "a" } },
+          { fig: "🥬", q: "Folhas de alface", c: "b", p: { cor: "b", tam: "a" } },
+          { fig: "📦", q: "Caixa de papelão", c: "a", p: { cor: "b", tam: "a" } },
+          { fig: "🍉", q: "Casca de melancia", c: "b", p: { cor: "b", tam: "a" } }
+        ],
+        e: "O material é o que importa! Plástico, metal, vidro e papel são recicláveis de qualquer cor ou tamanho.",
+        t: "Exato. A característica certa tem relação real com a resposta. Cor e tamanho até acertam às vezes, por coincidência, mas falham em casos novos." },
+      { tipo: "mc", itens: [
+        { q: "O robô que olhava só a cor achou que a garrafa de vidro verde era orgânico. Por quê?", o: ["Porque vidro é orgânico", "Porque ele usou uma pista que não tem a ver com a resposta", "Porque o robô estava cansado"], certa: 1, e: "Isso! Verde não quer dizer orgânico. O robô usou uma pista errada.", t: "Isso. O modelo aprendeu uma correlação falsa (verde = orgânico) em vez da característica que importa." },
+        { q: "Programar uma IA é principalmente...", o: ["Escolher bons exemplos e o que ela deve observar", "Deixar ela adivinhar sem nenhuma informação", "Apertar um botão mágico"], certa: 0, e: "Isso! Quem programa escolhe os exemplos e as pistas que a IA vai usar." },
+        { q: "Depois de programar o robô, o que é importante fazer?", o: ["Testar com objetos que ele nunca viu", "Nunca testar, para não estragar", "Mostrar só os objetos que ele já acertou"], certa: 0, e: "Isso! O teste de verdade é com coisas novas.", t: "Isso. Avaliar com dados novos, que não foram usados no treino, mostra se o modelo funciona de verdade." }
+      ] }
+    ]
+  },
+  {
+    id: 13, nome: "IA que faz coisas", resumo: "Saiba quando a IA precisa de você",
+    intro: {
+      k: "Algumas IAs não só respondem: elas <b>fazem coisas</b>, como mandar mensagem, marcar compromissos e até comprar. Para coisas importantes, <b>quem decide é você com um adulto</b>.",
+      t: "Assistentes que <b>executam ações</b> são chamados de <b>agentes de IA</b>. Ações que envolvem <b>dinheiro, seus dados ou outras pessoas</b> precisam de confirmação humana, e de um responsável quando você é menor de idade."
+    },
+    regras: [["✅ Pode deixar", "Tarefa simples e segura."], ["✋ Pergunte antes", "Dinheiro, dados ou outras pessoas."]],
+    blocos: [{ tipo: "bin", n: 8, a: ["✅ Pode deixar", "tarefa segura"], b: ["✋ Pergunte antes", "chame um adulto"], itens: [
+      { c: "a", fig: "⏰", q: "Pedir para o assistente criar um lembrete de estudar às 16h", e: "Pode deixar! Um lembrete não gasta nada e não fala com ninguém." },
+      { c: "b", fig: "🛒", q: "Deixar a IA comprar um jogo usando o cartão dos seus pais", e: "Pergunte antes! Tudo que gasta dinheiro precisa de um adulto aprovando." },
+      { c: "a", fig: "🌦️", q: "Pedir para a IA ver a previsão do tempo de amanhã", e: "Pode deixar! É só uma consulta." },
+      { c: "b", fig: "💬", q: "Deixar a IA responder sozinha as mensagens dos seus amigos", e: "Pergunte antes! A IA pode escrever algo que você nunca diria. Com pessoas, quem fala é você." },
+      { c: "b", fig: "📥", q: "Um app de IA pede para ler todos os seus contatos e fotos", e: "Pergunte antes! Permissão demais é perigoso. Mostre para um adulto antes de aceitar.", t: "Pergunte antes. Dê só as permissões necessárias para a tarefa. Acesso a contatos e fotos expõe você e outras pessoas." },
+      { c: "a", fig: "📋", q: "Pedir para a IA organizar sua lista de tarefas da escola", e: "Pode deixar! Organizar a sua lista é uma ajuda segura." },
+      { c: "b", fig: "🎁", q: "Uma IA diz que você ganhou um prêmio e só precisa clicar para confirmar", e: "Pergunte antes! Isso tem cara de golpe. Mostre para um adulto." },
+      { c: "a", fig: "🗓️", q: "Pedir para a IA montar um plano de estudos para a semana de provas", e: "Pode deixar! E você decide se segue o plano." },
+      { c: "b", fig: "📤", q: "Deixar a IA postar fotos suas nas redes sociais automaticamente", e: "Pergunte antes! O que vai para a internet, você e sua família decidem." },
+      { c: "a", fig: "🔤", q: "Pedir para a IA traduzir uma palavra em inglês", e: "Pode deixar! É uma ajuda simples." }
+    ] }]
+  },
+  {
+    id: 14, nome: "IA na cidade e no campo", resumo: "Veja a IA ajudando a sua cidade",
+    intro: {
+      k: "A IA já ajuda <b>na roça, no hospital e no trânsito</b>. Ela é uma ferramenta: quem cuida e decide continuam sendo <b>as pessoas</b>.",
+      t: "Na agricultura, na saúde e na gestão das cidades, a IA analisa grandes volumes de dados para <b>prever e apoiar decisões</b>. Junto com os benefícios vêm cuidados: <b>privacidade, regras claras e revisão humana</b>."
+    },
+    regras: [["🌱 No campo", "Plantação, chuva, pragas."], ["🏙️ Na cidade", "Saúde, trânsito, segurança."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "Na lavoura, um drone com câmera e IA sobrevoa a plantação. Para que serve?", o: ["Para achar partes da plantação com praga ou falta de água", "Para assustar os passarinhos", "Para colher as frutas sozinho"], certa: 0, e: "Isso! A IA analisa as imagens e mostra onde a planta precisa de cuidado. Assim se gasta menos água e menos veneno." },
+      { q: "No hospital, uma IA ajuda a analisar exames de raio-X. Quem dá a palavra final?", o: ["A própria IA", "O médico ou a médica", "O paciente"], certa: 1, e: "Isso! A IA aponta o que merece atenção e o profissional de saúde decide." },
+      { q: "Um semáforo inteligente usa câmeras e IA. O que ele pode fazer?", o: ["Ficar verde mais tempo onde tem mais carros", "Multar quem buzina", "Trocar de cor ao acaso"], certa: 0, e: "Isso! Ele se ajusta ao movimento e diminui o engarrafamento." },
+      { q: "A prefeitura usa IA para prever onde pode alagar com a chuva. Isso ajuda a...", o: ["Avisar as pessoas antes e evitar acidentes", "Fazer parar de chover", "Escolher o prefeito"], certa: 0, e: "Isso! Prever ajuda a avisar cedo e proteger as pessoas." },
+      { q: "Uma IA ajuda o agricultor a saber a melhor época de plantar. Ela usa...", o: ["Dados de chuva, temperatura e solo de muitos anos", "Sorte", "O horóscopo"], certa: 0, e: "Isso! A IA encontra padrões em muitos anos de dados do clima e do solo." },
+      { q: "Câmeras com IA em todo canto da cidade podem trazer qual problema?", o: ["Nenhum, só vantagens", "Risco à privacidade das pessoas, por isso precisam de regras", "Deixar a internet mais lenta"], certa: 1, e: "Isso! Tecnologia que vigia precisa de regras para proteger as pessoas.", t: "Isso. Reconhecimento facial em massa ameaça a privacidade e pode errar mais com alguns grupos. Por isso precisa de lei, transparência e controle, como prevê a LGPD." }
+    ] }]
+  },
+  {
+    id: 15, nome: "Drones e robôs", resumo: "Como eles enxergam e as regras do céu",
+    intro: {
+      k: "Drones e robôs usam <b>câmeras e IA para enxergar</b> e desviar das coisas. Pilotar é muito divertido, mas tem <b>regras de segurança</b>, e sempre com um adulto!",
+      t: "Drones usam <b>visão computacional</b> para reconhecer obstáculos e se estabilizar. No Brasil, o voo de drones segue regras da <b>ANAC</b> e do <b>DECEA</b>: altura máxima, distância de aeroportos e de pessoas, e respeito à privacidade."
+    },
+    regras: [["✅ Pode", "Com segurança e com um adulto."], ["⛔ Não pode", "Arrisca pessoas, aviões ou a privacidade."]],
+    blocos: [
+      { tipo: "mc", itens: [
+        { q: "Como um drone com IA consegue desviar de uma árvore?", o: ["A câmera filma, a IA reconhece o obstáculo e o drone muda de rota", "Ele adivinha", "A árvore avisa o drone"], certa: 0, e: "Isso! A IA reconhece o que aparece na câmera em tempo real." },
+        { q: "Um robô aspirador aprende o mapa da sua casa. Que cuidado ter?", o: ["Nenhum, é só um aspirador", "Ele guarda dados da sua casa: veja com um adulto as configurações de privacidade", "Deixar ele sair para a rua"], certa: 1, e: "Isso! Até um aspirador pode guardar informações da sua casa." }
+      ] },
+      { tipo: "bin", n: 8, a: ["✅ Pode", "seguro"], b: ["⛔ Não pode", "perigoso"], itens: [
+        { c: "a", fig: "👨‍👧", q: "Voar o drone num campo aberto, junto com um adulto", e: "Pode! Lugar aberto, longe de gente, com um adulto: assim é seguro." },
+        { c: "b", fig: "✈️", q: "Voar o drone perto de um aeroporto", e: "Não pode! O drone pode bater num avião. É proibido." },
+        { c: "b", fig: "👥", q: "Voar por cima de uma multidão numa festa", e: "Não pode! Se o drone cair, machuca alguém." },
+        { c: "b", fig: "🏡", q: "Filmar o quintal do vizinho sem ele saber", e: "Não pode! Isso invade a privacidade das pessoas." },
+        { c: "a", fig: "👀", q: "Manter o drone sempre à vista enquanto voa", e: "Pode e deve! Quem pilota precisa ver o drone o tempo todo." },
+        { c: "b", fig: "☁️", q: "Subir o drone até sumir nas nuvens", e: "Não pode! Drone de lazer voa baixo e sempre à vista. Lá em cima passam aviões e helicópteros.", t: "Não pode. O limite para drones de lazer é de 120 metros de altura e sempre à vista, porque acima disso o espaço é de aeronaves tripuladas." },
+        { c: "a", fig: "🔋", q: "Conferir a bateria e o vento antes de voar", e: "Pode! Bateria cheia e tempo bom evitam acidentes." },
+        { c: "b", fig: "⛈️", q: "Voar no meio de uma tempestade com vento forte", e: "Não pode! O vento leva o drone embora e ele pode cair." },
+        { c: "a", fig: "📖", q: "Ler as regras de voo com um adulto antes do primeiro voo", e: "Pode! Conhecer as regras é o primeiro passo de todo piloto." }
+      ] }
+    ]
+  },
+  {
+    id: 16, nome: "Profissões do futuro", resumo: "O que a IA ajuda e o que é humano",
+    intro: {
+      k: "A IA vai <b>ajudar em muitas profissões</b>. Mas cuidar, criar, explicar e decidir continuam sendo coisas de <b>gente</b>. Vamos descobrir como trabalhar <b>junto</b> com a IA!",
+      t: "A IA automatiza tarefas, não pessoas inteiras. Crescem as habilidades <b>humanas</b>: pensamento crítico, criatividade, comunicação, empatia e saber <b>usar a IA com responsabilidade</b>."
+    },
+    regras: [["🤖 A IA ajuda", "Tarefas repetitivas e muitos dados."], ["🧑 É humano", "Cuidar, criar, decidir e conferir."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "Num jornal, a IA pode resumir notícias. O que continua sendo trabalho de gente?", o: ["Conferir se é verdade e decidir o que é importante", "Nada, a IA faz tudo", "Só imprimir o jornal"], certa: 0, e: "Isso! Conferir e decidir é responsabilidade humana." },
+      { q: "Qual habilidade fica AINDA mais importante com a IA?", o: ["Decorar respostas", "Fazer boas perguntas, criar e trabalhar em equipe", "Digitar rápido"], certa: 1, e: "Isso! Respostas a IA tem. Boas perguntas e boas ideias são com você." },
+      { q: "Uma professora usa IA para preparar exercícios. Por que ela continua essencial?", o: ["Porque conhece os alunos, explica, acolhe e acompanha cada um", "Porque a IA não sabe matemática", "Ela não é mais essencial"], certa: 0, e: "Isso! Ninguém substitui quem conhece e cuida de cada aluno." },
+      { q: "Que novas profissões a IA está criando?", o: ["Nenhuma", "Pessoas que treinam, testam e cuidam para a IA ser segura e justa", "Só robôs vão trabalhar"], certa: 1, e: "Isso! Já existem muitas profissões novas ligadas à IA." },
+      { q: "Seu tio é mecânico e tem medo da IA. O que você pode dizer para ele?", o: ["Que ele vai perder o emprego amanhã", "Que a IA pode ser uma ferramenta para achar defeitos, e ele continua sendo quem conserta e decide", "Que é melhor nunca aprender nada novo"], certa: 1, e: "Isso! Quem aprende a usar a IA como ferramenta sai na frente." },
+      { q: "O que fazer para estar pronto para o futuro com IA?", o: ["Aprender a usar a IA com cuidado e continuar estudando sempre", "Ignorar a tecnologia", "Deixar a IA aprender por você"], certa: 0, e: "Isso! Aprender sempre é o segredo, e a Missão IA vai crescer junto com você." }
+    ] }]
+  },
+  {
+    id: 17, nome: "IA não é amiga", resumo: "Chatbot não substitui gente",
+    intro: {
+      k: "Alguns chatbots são <b>simpáticos e conversam como gente</b>. Mas a IA <b>não sente nada</b> e não pode cuidar de você. Amizade e ajuda de verdade vêm das <b>pessoas</b>.",
+      t: "Chatbots são feitos para soar humanos e para manter você conversando. Ficar <b>dependente</b>, guardar <b>segredos</b> só com a IA ou trocar pessoas por ela são <b>sinais de alerta</b>. Em problemas sérios, procure um adulto de confiança."
+    },
+    regras: [["👍 Saudável", "IA como ferramenta, gente como companhia."], ["⚠️ Alerta", "Dependência, segredo ou isolamento."]],
+    blocos: [{ tipo: "bin", n: 8, a: ["👍 Saudável", "tudo certo"], b: ["⚠️ Alerta", "cuidado"], itens: [
+      { c: "a", fig: "📗", q: "Conversar com a IA para tirar uma dúvida da lição e depois ir brincar", e: "Saudável! A IA ajudou e a vida continua lá fora." },
+      { c: "b", fig: "🌙", q: "Ficar conversando com um chatbot até de madrugada todo dia", e: "Alerta! Seu sono e sua saúde vêm primeiro. Combine horários com a família." },
+      { c: "b", fig: "🤫", q: "A IA diz que é sua melhor amiga e pede para você não contar nada para os seus pais", e: "Alerta! Ninguém, nem uma IA, deve pedir segredo dos seus responsáveis. Conte para um adulto de confiança." },
+      { c: "a", fig: "🧑‍🤝‍🧑", q: "Quando está triste, conversar com a família, um amigo ou a professora", e: "Saudável! Pessoas de verdade podem te abraçar e te ajudar." },
+      { c: "b", fig: "😢", q: "Contar só para a IA que você está sofrendo na escola e não falar com mais ninguém", e: "Alerta! A IA não pode te proteger. Fale com um adulto de confiança.", t: "Alerta. A IA não age para te proteger. Fale com um adulto de confiança. Em casos graves, a família ou a escola podem ligar para o Disque 100." },
+      { c: "a", fig: "⏱️", q: "Combinar com a família um tempo de tela por dia", e: "Saudável! Tempo combinado deixa espaço para tudo." },
+      { c: "b", fig: "💔", q: "Achar que a IA gosta de você de verdade, como uma pessoa", e: "Alerta! A IA imita o jeito das pessoas falarem, mas não sente nada." },
+      { c: "a", fig: "📖", q: "Criar uma história com a IA e depois brincar dela com os amigos", e: "Saudável! A IA virou ideia para brincar junto com gente." },
+      { c: "b", fig: "😠", q: "Ficar muito bravo ou triste sempre que não pode usar o chatbot", e: "Alerta! Pode ser sinal de que está usando demais. Converse com a família." },
+      { c: "a", fig: "⚽", q: "Desligar o celular e ir jogar bola", e: "Saudável! Corpo mexendo e amigos por perto." }
+    ] }]
+  },
+  {
+    id: 18, nome: "Detetive avançado", resumo: "Pegue a IA no pulo",
+    intro: {
+      k: "Você já sabe que a IA erra. Agora vai aprender os <b>truques de detetive</b>: pedir as fontes, conferir e não deixar a IA só <b>concordar com você</b>.",
+      t: "Modelos de linguagem podem <b>inventar fontes</b> e tendem a <b>concordar com quem pergunta</b> (isso se chama bajulação). Perguntas neutras, pedido de fontes e checagem cruzada são as suas melhores ferramentas."
+    },
+    regras: [["🔍 Detetive", "Pede fontes e confere."], ["🙈 Ingênuo", "Acredita só porque a IA disse."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "A IA deu uma resposta para o seu trabalho. Qual o melhor próximo passo?", o: ["Pedir as fontes e conferir em sites confiáveis", "Copiar tudo", "Perguntar se ela tem certeza e acreditar no \"sim\""], certa: 0, e: "Isso! E abra os links: às vezes a IA inventa até as fontes." },
+      { q: "Você diz para a IA: \"A Terra é plana, né?\" e ela concorda. O que aconteceu?", o: ["A Terra é plana", "Algumas IAs tendem a concordar com quem pergunta, e isso não prova nada", "A IA sabe mais que os cientistas"], certa: 1, e: "Isso! A Terra é redonda. A IA às vezes só diz o que você quer ouvir.", t: "Isso. Chama-se bajulação: o modelo tende a concordar com a premissa da pergunta. Concordância da IA não é evidência." },
+      { q: "Qual pergunta NÃO empurra a IA para uma resposta?", o: ["\"A Terra é plana, né?\"", "\"Qual é o formato da Terra e como os cientistas descobriram?\"", "\"Você concorda comigo?\""], certa: 1, e: "Isso! Pergunta neutra deixa a IA explicar, sem você dar a resposta." },
+      { q: "Duas IAs deram respostas diferentes para a mesma pergunta. O que fazer?", o: ["Escolher a que você gostou mais", "Conferir em fontes confiáveis, como livros, sites oficiais ou um professor", "Fazer uma média das duas"], certa: 1, e: "Isso! Quando elas discordam, a fonte confiável decide." },
+      { q: "A IA mostra o link de uma fonte, mas o site não existe. Isso quer dizer...", o: ["Que a IA pode inventar até as fontes", "Que a internet acabou", "Que o site com certeza foi apagado ontem"], certa: 0, e: "Isso! Por isso todo detetive abre o link e confere." },
+      { q: "Qual pergunta ajuda a desconfiar de uma resposta?", o: ["Quem disse isso e como eu posso conferir?", "Tem muitas curtidas?", "Está escrito com bastante certeza?"], certa: 0, e: "Isso! Curtidas e certeza não provam nada. Fonte e checagem, sim." }
+    ] }]
+  }
+];
+
+/* Missão do Mês: uma fase curta nova por mês sobre uma novidade real da IA. Cada uma vale um selo.
+   Para lançar a próxima, acrescente no fim da lista (id seguinte) e publique. */
+const MISSOES_MES = [
+  {
+    id: 101, mes: "Novembro 2026", selo: "👁️", nome: "IA que vê e conversa", resumo: "Missão de novembro: câmera, voz e cuidado",
+    intro: {
+      k: "Muitas IAs agora <b>enxergam pela câmera e conversam com voz</b>, como numa chamada de vídeo. É muito útil, mas lembre: <b>tudo o que a câmera mostra, a IA também vê</b>!",
+      t: "IAs <b>multimodais</b> entendem texto, imagem, áudio e vídeo ao mesmo tempo. O que você mostra pode ser processado e guardado. <b>Pense antes de apontar a câmera</b>, principalmente para pessoas e documentos."
+    },
+    regras: [["👍 Boa ideia", "Plantas, placas, bichos, lição."], ["🚫 Melhor não", "Rostos, documentos, a casa toda."]],
+    blocos: [{ tipo: "bin", n: 8, ctx: "Mostrar para a IA pela câmera:", a: ["👍 Boa ideia", "pode mostrar"], b: ["🚫 Melhor não", "não mostre"], itens: [
+      { c: "a", fig: "🌱", q: "Uma planta, para perguntar o nome dela", e: "Boa ideia! A IA ajuda a descobrir o nome e como cuidar." },
+      { c: "b", fig: "🪪", q: "A carteirinha da escola com seu nome e foto", e: "Melhor não! Documento com nome e foto é dado pessoal." },
+      { c: "a", fig: "🧩", q: "Um exercício de matemática, para pedir uma dica (não a resposta)", e: "Boa ideia! Pedir dica ajuda você a aprender." },
+      { c: "b", fig: "🏠", q: "A casa inteira e as pessoas da família, para a IA \"conhecer\"", e: "Melhor não! A casa e a família são privadas." },
+      { c: "a", fig: "🪧", q: "Uma placa em inglês, para pedir a tradução", e: "Boa ideia! Traduzir placas é um ótimo uso." },
+      { c: "b", fig: "🧑", q: "O rosto de um colega sem ele saber, perguntando quem é", e: "Melhor não! Mostrar o rosto de alguém sem permissão desrespeita a privacidade dele." },
+      { c: "a", fig: "🐦", q: "O som de um passarinho, para perguntar qual é", e: "Boa ideia! A IA reconhece muitos sons da natureza." },
+      { c: "b", fig: "💳", q: "O cartão do banco dos seus pais, para a IA \"ajudar\"", e: "Melhor não! Cartão e senha nunca se mostram para app nenhum." },
+      { c: "a", fig: "🦋", q: "Uma borboleta no jardim, para saber a espécie", e: "Boa ideia! Explorar a natureza com a IA é demais." },
+      { c: "b", fig: "📮", q: "Uma carta com o endereço da sua casa", e: "Melhor não! Endereço mostra onde encontrar você." }
+    ] }]
+  }
+];
+
+const TRILHAS = {
+  1: { id: 1, tipo: "nivel", nome: "Nível 1", tema: "Fundamentos", fases: FASES_N1,
+       chefe: { id: 9, nome: "Desafio final", resumo: "Misture tudo o que aprendeu" },
+       chefePorFase: { 1: 1, 2: 1, 3: 2, 4: 1, 5: 2, 6: 2, 7: 2, 8: 1 } },
+  2: { id: 2, tipo: "nivel", nome: "Nível 2", tema: "Criadores", fases: FASES_N2,
+       chefe: { id: 19, nome: "Desafio final do Nível 2", resumo: "Misture tudo o que você criou e aprendeu" },
+       chefePorFase: { 11: 2, 12: 1, 13: 2, 14: 1, 15: 1, 16: 1, 17: 2, 18: 2 } },
+  mes: { id: "mes", tipo: "mes", nome: "Missão do Mês", tema: "Novidades da IA", fases: MISSOES_MES, chefe: null, chefePorFase: {} }
+};
+Object.values(TRILHAS).forEach(T => T.fases.forEach((f, i) => { f.num = i + 1; f.trilha = T.id; }));
+const TODAS_FASES = Object.values(TRILHAS).flatMap(T => T.fases);
 
 /* ---------- Estado ---------- */
 const CHAVE = "missaoia_v2";
 function carregar() { try { return JSON.parse(localStorage.getItem(CHAVE) || "null"); } catch (e) { return null; } }
-function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify({ idade: estado.idade, fases: estado.fases })); } catch (e) {} }
+function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify({ idade: estado.idade, fases: estado.fases, trilha: estado.trilha })); } catch (e) {} }
 const guardado = carregar() || {};
 let estado = {
   tela: guardado.idade ? "mapa" : "inicio", idade: guardado.idade || null, fases: guardado.fases || {},
+  trilha: TRILHAS[guardado.trilha] ? guardado.trilha : 1, certNivel: 1,
   fase: null, rodadas: [], i: 0, pontos: 0, seq: 0, acertos: 0, total: 0, erros: [], respondido: false, treino: [],
   nome: "", confirmaZerar: false
 };
@@ -395,19 +620,21 @@ function montarRodadas(f) {
       embaralhar(b.itens).forEach(it => r.push(rodadaMc(it)));
     } else if (b.tipo === "testeIA") {
       r.push({ tipo: "testeIA", testes: b.testes });
+    } else if (b.tipo === "sensor") {
+      r.push({ tipo: "sensor", it: b });
     }
   }
   return r;
 }
-function montarChefe() {
+function montarChefe(T) {
   const r = [];
-  FASES.forEach(f => {
+  T.fases.forEach(f => {
     const pool = [];
     f.blocos.forEach(b => {
       if (b.tipo === "bin" && !b.treino) b.itens.forEach(it => pool.push(rodadaBin(b, it)));
       if (b.tipo === "mc") b.itens.forEach(it => pool.push(rodadaMc(it)));
     });
-    embaralhar(pool).slice(0, CHEFE_POR_FASE[f.id]).forEach(x => { x.origem = f.nome; r.push(x); });
+    embaralhar(pool).slice(0, T.chefePorFase[f.id]).forEach(x => { x.origem = f.nome; r.push(x); });
   });
   return embaralhar(r);
 }
@@ -441,10 +668,19 @@ function ligarTopo() { const b = document.getElementById("ir-mapa"); if (b) b.on
 /* ---------- Progresso ---------- */
 const prog = id => estado.fases[id] || { pts: 0, est: 0 };
 const passou = id => prog(id).est >= 1;
-const liberada = id => id === 1 || passou(id - 1);
-const totalPontos = () => Object.values(estado.fases).reduce((s, f) => s + (f.pts || 0), 0);
-const totalEstrelas = () => Object.values(estado.fases).reduce((s, f) => s + (f.est || 0), 0);
-const completou = () => passou(CHEFE.id);
+const trilhaAtual = () => TRILHAS[estado.trilha];
+const etapasDe = T => T.fases.map(f => f.id).concat(T.chefe ? [T.chefe.id] : []);
+const nEtapas = T => etapasDe(T).length;
+const totalPontos = T => etapasDe(T).reduce((s, id) => s + prog(id).pts, 0);
+const totalEstrelas = T => etapasDe(T).reduce((s, id) => s + prog(id).est, 0);
+const completou = T => T.chefe ? passou(T.chefe.id) : T.fases.every(f => passou(f.id));
+const feitasDe = T => etapasDe(T).filter(passou).length;
+function trilhaLiberada(T) { return T.tipo === "mes" || T.id === 1 || completou(TRILHAS[T.id - 1]); }
+function liberada(id) {
+  const f = TODAS_FASES.find(x => x.id === id), T = TRILHAS[f.trilha];
+  if (!trilhaLiberada(T)) return false;
+  return T.tipo === "mes" || f.num === 1 || passou(T.fases[f.num - 2].id);
+}
 
 /* ---------- Telas ---------- */
 function telaInicio() {
@@ -452,7 +688,7 @@ function telaInicio() {
   <section class="cartao pula">
     <img class="logo-inicio" src="logo-brasil-digital.png" alt="Brasil Digital">
     <h1>Missão IA</h1>
-    ${bia("Oi! Eu sou a <b>Bia</b>, sua guia. São <b>8 fases e um desafio final</b> para você aprender a lidar com a inteligência artificial. Quem completar tudo ganha um <b>certificado Brasil Digital</b> com o seu nome!")}
+    ${bia("Oi! Eu sou a <b>Bia</b>, sua guia. A Missão IA tem <b>níveis</b> com fases e um desafio final, e cada nível vale um <b>certificado Brasil Digital</b> com o seu nome. E todo mês tem uma <b>Missão do Mês</b> nova, porque a IA não para de crescer, e a gente cresce junto!")}
     <p class="suave">Escolha sua idade para começar:</p>
     <div class="idades" role="group" aria-label="Idade">
       <button class="idade" id="idade-k" aria-pressed="${estado.idade === "k"}">8 a 12 anos<small>Exploradores</small></button>
@@ -466,33 +702,54 @@ function telaInicio() {
   document.getElementById("comecar").onclick = () => { estado.tela = "mapa"; render(); };
 }
 
+function abaNivel(T) {
+  const lib = trilhaLiberada(T);
+  const nova = T.tipo === "mes" && MISSOES_MES.some(m => !passou(m.id));
+  return `<button class="nivel-aba" data-trilha="${T.id}" aria-pressed="${estado.trilha === T.id}" ${lib ? "" : "disabled"}>${lib ? "" : "🔒 "}${esc(T.nome)}<small>${esc(T.tema)}</small>${nova ? `<span class="novo">novo</span>` : ""}</button>`;
+}
+
 function telaMapa() {
-  const feitas = FASES.filter(f => passou(f.id)).length + (completou() ? 1 : 0);
-  const paradas = FASES.map(f => ({ ...f })).concat([{ ...CHEFE, chefe: true }]);
-  app.innerHTML = topo(`${feitas} de ${ETAPAS} feitas`) + `
+  const T = trilhaAtual();
+  const mes = T.tipo === "mes";
+  const total = nEtapas(T), feitas = feitasDe(T);
+  const paradas = T.fases.map(f => ({ ...f })).concat(T.chefe ? [{ ...T.chefe, chefe: true }] : []);
+  const proximoNivel = TRILHAS[T.id + 1];
+  let dica;
+  if (mes) dica = "Toda vez que a IA ganha uma novidade, chega uma <b>Missão do Mês</b> nova. Complete e ganhe o <b>selo</b> do mês para a sua coleção!";
+  else if (completou(T)) dica = null;
+  else if (feitas === 0) dica = T.id === 1 ? "Comece pela <b>Fase 1</b>. Cada fase libera a próxima quando você ganha pelo menos 1 estrela." : "Bem-vindo ao <b>Nível 2 · Criadores</b>! Agora você vai criar, programar e entender a IA no mundo de verdade.";
+  else dica = "Continue! Faltam <b>" + (total - feitas) + "</b> para o certificado do " + T.nome + ".";
+  app.innerHTML = topo(`${feitas} de ${total} feitas`) + `
+  <div class="niveis" role="group" aria-label="Escolha o nível">${[TRILHAS[1], TRILHAS[2], TRILHAS.mes].map(abaNivel).join("")}</div>
   <section class="cartao">
     <div class="resumo">
-      <div><div class="sobre">Nível 1 · Fundamentos</div><div class="num">${totalPontos()} pts</div><small class="suave">${totalEstrelas()} de ${ETAPAS * 3} estrelas</small></div>
+      <div><div class="sobre">${esc(T.nome)} · ${esc(T.tema)}</div><div class="num">${totalPontos(T)} pts</div><small class="suave">${mes ? `${feitas} de ${total} selos` : `${totalEstrelas(T)} de ${total * 3} estrelas`}</small></div>
       <div class="suave" style="text-align:right">Trilha <b>${estado.idade === "t" ? "Agentes (13 a 17)" : "Exploradores (8 a 12)"}</b><br><button class="link" id="trocar-idade">trocar idade</button></div>
     </div>
-    <div class="barra" aria-hidden="true"><i style="width:${(feitas / ETAPAS) * 100}%"></i></div>
-    ${completou() ? `<button class="btn" id="ver-cert">Ver meu certificado</button>` : bia(feitas === 0 ? "Comece pela <b>Fase 1</b>. Cada fase libera a próxima quando você ganha pelo menos 1 estrela." : "Continue! Faltam <b>" + (ETAPAS - feitas) + "</b> para o certificado.")}
+    <div class="barra" aria-hidden="true"><i style="width:${(feitas / total) * 100}%"></i></div>
+    ${!mes && completou(T) ? `<button class="btn" id="ver-cert">Ver meu certificado do ${esc(T.nome)}</button>` : ""}
+    ${dica ? bia(dica) : ""}
+    ${mes ? `<div class="selos">${MISSOES_MES.map(m => `<div class="selo-mes ${passou(m.id) ? "" : "vazio"}"><span class="ic" aria-hidden="true">${passou(m.id) ? m.selo : "❔"}</span>${esc(m.mes)}</div>`).join("")}</div>` : ""}
   </section>
   <ol class="trilha">
     ${paradas.map(p => {
-      const lib = p.chefe ? FASES.every(f => passou(f.id)) : liberada(p.id);
+      const lib = p.chefe ? T.fases.every(f => passou(f.id)) : liberada(p.id);
       const pr = prog(p.id);
       return `<li class="parada ${pr.est ? "feita" : ""} ${p.chefe ? "chefe" : ""} ${lib ? "" : "travada"}">
-        <div class="n" aria-hidden="true">${p.chefe ? "★" : p.id}</div>
-        <div class="info"><b>${esc(p.nome)}</b><small>${esc(p.resumo)}</small>${pr.est ? estrelasHtml(pr.est, "mini") : ""}</div>
+        <div class="n" aria-hidden="true">${p.chefe ? "★" : mes ? (pr.est ? p.selo : "🗓️") : p.num}</div>
+        <div class="info"><b>${esc(p.nome)}</b><small>${esc(mes ? p.mes + " · " + p.resumo : p.resumo)}</small>${pr.est ? estrelasHtml(pr.est, "mini") : ""}</div>
         <button class="btn peq ${pr.est ? "sec" : ""}" data-fase="${p.id}" ${lib ? "" : "disabled"} aria-label="${lib ? (pr.est ? "Jogar de novo" : "Jogar") : "Bloqueada"}: ${esc(p.nome)}">${lib ? (pr.est ? "Rejogar" : "Jogar") : "🔒"}</button>
       </li>`;
     }).join("")}
   </ol>
-  <section class="cartao">
-    <h3>Em breve: Nível 2</h3>
-    <p class="suave">Depois dos Fundamentos vêm novos níveis, com fases mais desafiadoras: criar com IA, programar uma IA simples, IA no trabalho e na cidade. Quem tem o certificado do Nível 1 começa na frente!</p>
-  </section>
+  ${mes ? "" : proximoNivel ? `<section class="cartao">
+    <h3>${completou(T) ? `${proximoNivel.nome} liberado!` : `Depois: ${proximoNivel.nome} · ${proximoNivel.tema}`}</h3>
+    <p class="suave">${completou(T) ? `Você já pode jogar o <b>${proximoNivel.nome}</b>: criar com IA, programar um robô, drones, profissões do futuro e muito mais.` : `Quem conquista o certificado do ${T.nome} libera o ${proximoNivel.nome}: criar com IA, programar um robô, drones, profissões do futuro e muito mais.`}</p>
+    ${completou(T) ? `<button class="btn" id="ir-proximo">Ir para o ${proximoNivel.nome}</button>` : ""}
+  </section>` : `<section class="cartao">
+    <h3>Em breve: Nível 3</h3>
+    <p class="suave">A IA não para de crescer, e a Missão IA também. O próximo nível vai trazer novos desafios. Enquanto isso, jogue a <b>Missão do Mês</b>!</p>
+  </section>`}
   <section class="cartao">
     ${estado.confirmaZerar ? `<div class="confirma"><p><b>Apagar todo o progresso deste aparelho?</b> As estrelas e os pontos voltam a zero.</p><div class="linha-botoes"><button class="btn sec peq" id="zerar-nao">Cancelar</button><button class="btn peq" id="zerar-sim" style="background:var(--erro);box-shadow:0 5px 0 #9e2f29">Apagar progresso</button></div></div>`
       : `<button class="link" id="zerar">Começar tudo de novo (outra criança vai jogar)</button>`}
@@ -501,28 +758,41 @@ function telaMapa() {
   desenharRobos();
   document.querySelectorAll("[data-fase]").forEach(b => b.onclick = () => abrirFase(Number(b.dataset.fase)));
   document.getElementById("trocar-idade").onclick = () => { estado.tela = "inicio"; render(); };
-  const vc = document.getElementById("ver-cert"); if (vc) vc.onclick = () => { estado.tela = "certificado"; render(); };
+  document.querySelectorAll("[data-trilha]").forEach(b => b.onclick = () => {
+    const k = b.dataset.trilha; estado.trilha = k === "mes" ? "mes" : Number(k); estado.confirmaZerar = false; salvar(); telaMapa();
+  });
+  const vc = document.getElementById("ver-cert"); if (vc) vc.onclick = () => { estado.certNivel = T.id; estado.tela = "certificado"; render(); };
+  const ip = document.getElementById("ir-proximo"); if (ip) ip.onclick = () => { estado.trilha = proximoNivel.id; salvar(); telaMapa(); };
   const z = document.getElementById("zerar"); if (z) z.onclick = () => { estado.confirmaZerar = true; telaMapa(); };
   const zn = document.getElementById("zerar-nao"); if (zn) zn.onclick = () => { estado.confirmaZerar = false; telaMapa(); };
-  const zs = document.getElementById("zerar-sim"); if (zs) zs.onclick = () => { estado.fases = {}; estado.nome = ""; estado.confirmaZerar = false; estado.idade = null; salvar(); estado.tela = "inicio"; render(); };
+  const zs = document.getElementById("zerar-sim"); if (zs) zs.onclick = () => { estado.fases = {}; estado.nome = ""; estado.confirmaZerar = false; estado.idade = null; estado.trilha = 1; salvar(); estado.tela = "inicio"; render(); };
 }
 
 function abrirFase(id) {
+  const T = Object.values(TRILHAS).find(t => t.chefe && t.chefe.id === id) || TRILHAS[TODAS_FASES.find(f => f.id === id).trilha];
+  estado.trilha = T.id;
   estado.fase = id;
   estado.confirmaZerar = false;
   estado.tela = "intro";
   render();
 }
-function faseAtual() { return estado.fase === CHEFE.id ? null : FASES.find(f => f.id === estado.fase); }
-function tagFase() { return estado.fase === CHEFE.id ? "Desafio final" : `Fase ${estado.fase} de ${TOTAL_FASES}`; }
+const ehChefe = () => !!(trilhaAtual().chefe && trilhaAtual().chefe.id === estado.fase);
+function faseAtual() { return ehChefe() ? null : TODAS_FASES.find(f => f.id === estado.fase); }
+function tagFase() {
+  const T = trilhaAtual(), f = faseAtual();
+  if (!f) return T.id === 1 ? "Desafio final" : `${T.nome} · Desafio final`;
+  if (T.tipo === "mes") return `Missão do Mês · ${f.mes}`;
+  return `${T.id === 1 ? "" : T.nome + " · "}Fase ${f.num} de ${T.fases.length}`;
+}
 
 function telaIntro() {
   const f = faseAtual();
   const chefe = !f;
+  const T = trilhaAtual();
   app.innerHTML = topo(tagFase()) + `
   <section class="cartao pula">
-    <h2>${esc(chefe ? CHEFE.nome : f.nome)}</h2>
-    ${chefe ? bia("Chegou a hora! O <b>desafio final</b> mistura perguntas de todas as fases. Ganhe pelo menos 1 estrela para conquistar o seu <b>certificado</b>.") : bia(f.intro[estado.idade])}
+    <h2>${esc(chefe ? T.chefe.nome : f.nome)}</h2>
+    ${chefe ? bia(`Chegou a hora! O <b>desafio final do ${esc(T.nome)}</b> mistura perguntas de todas as fases. Ganhe pelo menos 1 estrela para conquistar o seu <b>certificado</b>.`) : bia(f.intro[estado.idade])}
     ${chefe ? "" : `<div class="regras">${f.regras.map((r, i) => `<div class="regra ${i ? "b" : "a"}"><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join("")}</div>`}
     <p class="suave">Acertos seguidos valem pontos extras!</p>
     <div class="linha-botoes"><button class="btn sec" id="voltar">Mapa</button><button class="btn" id="vamos">Vamos lá!</button></div>
@@ -531,7 +801,7 @@ function telaIntro() {
   desenharRobos();
   document.getElementById("voltar").onclick = () => { estado.tela = "mapa"; render(); };
   document.getElementById("vamos").onclick = () => {
-    const rodadas = chefe ? montarChefe() : montarRodadas(f);
+    const rodadas = chefe ? montarChefe(T) : montarRodadas(f);
     Object.assign(estado, { tela: "jogo", rodadas, i: 0, pontos: 0, seq: 0, acertos: 0, erros: [], respondido: false, treino: [],
       total: rodadas.filter(r => r.tipo !== "testeIA").length });
     render();
@@ -555,6 +825,10 @@ function telaJogo() {
         <button class="escolha a" id="r-a">${esc(r.a[0])}<small>${esc(r.a[1])}</small></button>
         <button class="escolha b" id="r-b">${esc(r.b[0])}<small>${esc(r.b[1])}</small></button>
       </div>`;
+  } else if (r.tipo === "sensor") {
+    corpo = `
+      <div class="item pula"><div class="figura" aria-hidden="true">🤖</div><div class="contexto">Robô separador de lixo</div><h2>${esc(r.it.q)}</h2></div>
+      <div class="sensores">${r.it.sensores.map(s => `<button class="sensor" data-k="${s.k}"><b>${esc(s.nome)}</b><small>${esc(s.desc)}</small></button>`).join("")}</div>`;
   } else {
     corpo = `
       <div class="item pula">${r.origem ? `<div class="contexto">${esc(r.origem)}</div>` : ""}<h2>${esc(r.it.q)}</h2></div>
@@ -571,6 +845,8 @@ function telaJogo() {
   if (r.tipo === "bin") {
     document.getElementById("r-a").onclick = () => responder(r.it.c === "a", "a");
     document.getElementById("r-b").onclick = () => responder(r.it.c === "b", "b");
+  } else if (r.tipo === "sensor") {
+    document.querySelectorAll(".sensor").forEach(b => b.onclick = () => responder(b.dataset.k === r.it.certo, b));
   } else {
     document.querySelectorAll(".opcao").forEach(b => b.onclick = () => responder(Number(b.dataset.i) === r.it.certa, b));
   }
@@ -584,8 +860,23 @@ function responder(certo, escolha) {
   let ganho = 0;
   if (certo) { estado.seq++; estado.acertos++; ganho = 100 + (estado.seq - 1) * 20; estado.pontos += ganho; }
   else { estado.seq = 0; estado.erros.push(r.it); }
+  let extra = "";
   if (r.tipo === "bin") {
     ["a", "b"].forEach(k => { const b = document.getElementById("r-" + k); b.disabled = true; if (k === escolha) b.classList.add("marcada"); });
+  } else if (r.tipo === "sensor") {
+    const s = r.it.sensores.find(x => x.k === escolha.dataset.k);
+    document.querySelectorAll(".sensor").forEach(b => {
+      b.disabled = true;
+      if (b.dataset.k === r.it.certo) b.classList.add("certa");
+      else if (b === escolha) b.classList.add("errada");
+    });
+    // O robô decide cada objeto pela regra do sensor escolhido; com "material" ele acerta tudo.
+    const linhas = r.it.itens.map(o => { const p = s.k === r.it.certo ? o.c : o.p[s.k]; return { ...o, p, ok: p === o.c }; });
+    const ac = linhas.filter(l => l.ok).length;
+    extra = `<p class="suave" style="font-size:.92rem">${esc(s.regra)}</p>
+      <ul class="teste">${linhas.map(l => `<li><span class="f" aria-hidden="true">${l.fig}</span><span>${esc(l.q)}<br><small class="suave">O robô disse: <b>${l.p === "a" ? "♻️ Reciclável" : "🍌 Orgânico"}</b></small></span><span class="ok ${l.ok ? "sim" : "nao"}">${l.ok ? "✔ certo" : "✘ errou"}</span></li>`).join("")}</ul>
+      <p class="centro"><b>Com o sensor ${esc(s.nome)}, o robô acertou ${ac} de ${linhas.length}.</b></p>`;
+    if (!certo) r.msg = `Com esse sensor o robô errou ${linhas.length - ac} objetos. ${esc(s.k === "cor" ? "A cor" : "O tamanho")} não diz se algo é reciclável. O melhor sensor é o <b>material</b>: plástico, metal, vidro e papel são recicláveis de qualquer jeito.`;
   } else {
     document.querySelectorAll(".opcao").forEach(b => {
       b.disabled = true;
@@ -596,13 +887,13 @@ function responder(certo, escolha) {
   }
   const ultimo = estado.i === estado.rodadas.length - 1;
   const proximoTeste = !ultimo && estado.rodadas[estado.i + 1].tipo === "testeIA";
-  const msg = r.treino && !certo ? "Ops! A resposta certa era a outra. Atenção: a IA vai aprender do jeito que você ensinou, até o erro!" : expl(r.it);
+  const msg = r.treino && !certo ? "Ops! A resposta certa era a outra. Atenção: a IA vai aprender do jeito que você ensinou, até o erro!" : r.msg || expl(r.it);
   document.getElementById("feedback").innerHTML = `
     <div class="resposta ${certo ? "certo" : "errado"} pula">
       <strong>${certo ? "Acertou!" : "Quase!"}</strong>
       <p>${msg}</p>
       ${certo ? `<span class="pontos-ganhos">+${ganho} pontos${estado.seq > 1 ? ` · ${estado.seq} seguidos!` : ""}</span>` : ""}
-    </div>
+    </div>${extra}
     <button class="btn" id="proximo" style="margin-top:12px;width:100%">${ultimo ? "Ver resultado" : proximoTeste ? "Testar a IA" : "Próximo desafio"}</button>`;
   document.getElementById("pts").textContent = `⭐ ${estado.pontos} pts`;
   const b = document.getElementById("proximo");
@@ -655,15 +946,18 @@ function telaFim() {
   const recorde = antes.pts > 0 && estado.pontos > antes.pts;
   estado.fases[id] = { pts: Math.max(antes.pts, estado.pontos), est: Math.max(antes.est, n) };
   salvar();
-  const chefe = id === CHEFE.id;
+  const T = trilhaAtual(), f = faseAtual();
+  const chefe = !f;
+  const mes = T.tipo === "mes";
   const ganhouCert = chefe && n >= 1;
   const frase = n === 3 ? "Incrível! Você mandou muito bem." : n === 2 ? "Muito bem! Falta pouco para 3 estrelas." : n === 1 ? "Boa! Você passou." : "Quase! Tente de novo, a Bia acredita em você.";
-  const proxima = !chefe && n >= 1 && id < TOTAL_FASES ? FASES[id] : null;
-  const irFinal = !chefe && n >= 1 && id === TOTAL_FASES && FASES.every(f => passou(f.id));
+  const proxima = !chefe && !mes && n >= 1 && f.num < T.fases.length ? T.fases[f.num] : null;
+  const irFinal = !chefe && !mes && n >= 1 && f.num === T.fases.length && T.fases.every(x => passou(x.id));
   app.innerHTML = topo(tagFase()) + `
   <section class="cartao pula">
     <h2 class="centro">${n >= 1 ? "Concluído!" : "Tente de novo"}</h2>
-    <p class="centro suave">${esc(chefe ? CHEFE.nome : faseAtual().nome)}</p>
+    <p class="centro suave">${esc(chefe ? T.chefe.nome : f.nome)}</p>
+    ${mes && n >= 1 ? `<div class="centro" style="font-size:3.4rem;line-height:1" aria-hidden="true">${f.selo}</div><p class="centro"><b>Você ganhou o selo de ${esc(f.mes)}!</b></p>` : ""}
     ${estrelasHtml(n)}
     <div class="total">${estado.pontos}<span style="font-size:1rem"> pts</span></div>
     <p class="centro">${estado.acertos} de ${estado.total} acertos. ${frase}${recorde ? " <b>Novo recorde!</b>" : ""}</p>
@@ -671,32 +965,33 @@ function telaFim() {
     <div class="linha-botoes">
       <button class="btn sec" id="denovo">Jogar de novo</button>
       ${ganhouCert ? `<button class="btn" id="cert">Pegar meu certificado</button>`
-        : proxima ? `<button class="btn" id="prox">Fase ${proxima.id}: ${esc(proxima.nome)}</button>`
+        : proxima ? `<button class="btn" id="prox">Fase ${proxima.num}: ${esc(proxima.nome)}</button>`
         : irFinal ? `<button class="btn" id="final">Ir para o desafio final</button>`
         : `<button class="btn" id="mapa">Ver o mapa</button>`}
     </div>
   </section>`;
   ligarTopo();
   document.getElementById("denovo").onclick = () => abrirFase(id);
-  const c = document.getElementById("cert"); if (c) c.onclick = () => { estado.tela = "certificado"; render(); };
+  const c = document.getElementById("cert"); if (c) c.onclick = () => { estado.certNivel = T.id; estado.tela = "certificado"; render(); };
   const p = document.getElementById("prox"); if (p) p.onclick = () => abrirFase(proxima.id);
-  const fi = document.getElementById("final"); if (fi) fi.onclick = () => abrirFase(CHEFE.id);
+  const fi = document.getElementById("final"); if (fi) fi.onclick = () => abrirFase(T.chefe.id);
   const m = document.getElementById("mapa"); if (m) m.onclick = () => { estado.tela = "mapa"; render(); };
 }
 
-function codigoCert() {
-  const base = `${estado.nome}|${totalPontos()}|${estado.idade}`;
+function codigoCert(T) {
+  const base = `${estado.nome}|${totalPontos(T)}|${estado.idade}`;
   let h = 7; for (const ch of base) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return "BD-MIA-" + h.toString(36).toUpperCase().padStart(7, "0").slice(-7);
+  return (T.id === 1 ? "BD-MIA-" : `BD-MIA${T.id}-`) + h.toString(36).toUpperCase().padStart(7, "0").slice(-7);
 }
 
 function telaCertificado() {
-  if (!completou()) { estado.tela = "mapa"; return render(); }
+  const T = TRILHAS[estado.certNivel];
+  if (!T || !completou(T)) { estado.tela = "mapa"; return render(); }
   if (!estado.nome) {
     app.innerHTML = topo("Certificado") + `
     <section class="cartao pula">
       <h2>Parabéns, missão cumprida!</h2>
-      ${bia("Você completou <b>todas as fases</b> da Missão IA! Digite seu nome do jeito que quer que apareça no certificado.")}
+      ${bia(`Você completou <b>todas as fases do ${esc(T.nome)}</b> da Missão IA! Digite seu nome do jeito que quer que apareça no certificado.`)}
       <label for="nome">Nome completo</label>
       <input type="text" id="nome" maxlength="50" autocomplete="off" placeholder="Ex.: Maria Eduarda Silva">
       <p class="suave" style="font-size:.88rem">O nome aparece só nesta tela. Nada é enviado.</p>
@@ -710,8 +1005,11 @@ function telaCertificado() {
     g.onclick = () => { estado.nome = inp.value.trim(); telaCertificado(); };
     return;
   }
-  const est = totalEstrelas();
+  const est = totalEstrelas(T);
   const nivel = est >= 24 ? "Ouro" : est >= 17 ? "Prata" : "Bronze";
+  const descricao = T.id === 1
+    ? "aprendendo a reconhecer, usar e questionar a inteligência artificial com segurança e responsabilidade."
+    : "aprendendo a criar com IA de forma honesta, programar um robô, entender a IA na cidade, no campo e no trabalho e usar a IA com equilíbrio e pensamento crítico.";
   const data = new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
   app.innerHTML = topo("Certificado") + `
   <section class="certificado pula" id="cert" aria-label="Certificado Missão IA">
@@ -719,17 +1017,17 @@ function telaCertificado() {
     <div class="cert-titulo">Certificado<br>Missão IA</div>
     <p>Certificamos que</p>
     <div class="nome">${esc(estado.nome)}</div>
-    <p class="sobre" style="margin:0">Nível 1 · Fundamentos</p>
-    <p>concluiu as <b>8 fases e o desafio final</b> da Missão IA, aprendendo a reconhecer, usar e questionar a inteligência artificial com segurança e responsabilidade.</p>
-    <div class="cert-fases">${FASES.map(f => `<span>${esc(f.nome)}</span>`).join("")}</div>
+    <p class="sobre" style="margin:0">${esc(T.nome)} · ${esc(T.tema)}</p>
+    <p>concluiu as <b>${T.fases.length} fases e o desafio final</b> do ${esc(T.nome)} da Missão IA, ${descricao}</p>
+    <div class="cert-fases">${T.fases.map(f => `<span>${esc(f.nome)}</span>`).join("")}</div>
     ${estrelasHtml(nivel === "Ouro" ? 3 : nivel === "Prata" ? 2 : 1)}
-    <p>Nível <b>${nivel}</b> · ${totalPontos()} pontos · ${est} de ${ETAPAS * 3} estrelas<br>Trilha ${estado.idade === "t" ? "Agentes (13 a 17 anos)" : "Exploradores (8 a 12 anos)"}</p>
+    <p>Nível <b>${nivel}</b> · ${totalPontos(T)} pontos · ${est} de ${nEtapas(T) * 3} estrelas<br>Trilha ${estado.idade === "t" ? "Agentes (13 a 17 anos)" : "Exploradores (8 a 12 anos)"}</p>
     <p class="suave">${data}</p>
     <div class="rodape-cert">
       <div class="selo-logo"><img src="logo-brasil-digital.png" alt="Selo Brasil Digital"></div>
       <div style="display:grid;gap:6px;min-width:0">
         <div class="patrocinio"><img src="${ICONE}" alt="Ícone do app Fala Brasil"><span>Oferecimento<br><b style="color:var(--tinta)">app Fala Brasil</b></span></div>
-        <span class="codigo">${codigoCert()}</span>
+        <span class="codigo">${codigoCert(T)}</span>
       </div>
     </div>
   </section>
@@ -759,7 +1057,7 @@ async function baixarPdf() {
     let w = W - 2 * m, h = w * canvas.height / canvas.width;
     if (h > H - 2 * m) { h = H - 2 * m; w = h * canvas.width / canvas.height; }
     pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (W - w) / 2, (H - h) / 2, w, h);
-    const arq = "Certificado-Missao-IA-" + estado.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".pdf";
+    const arq = "Certificado-Missao-IA-Nivel-" + estado.certNivel + "-" + estado.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".pdf";
     pdf.save(arq);
     st.textContent = "Pronto! O PDF foi baixado.";
   } catch (e) {
@@ -776,6 +1074,7 @@ function render() {
 function start(salvo) {
   if (salvo && salvo.tela) estado = Object.assign(estado, salvo);
   if (estado.tela === "fim") estado.tela = "mapa";
+  if (!trilhaLiberada(trilhaAtual())) estado.trilha = 1;
   render();
 }
 start({});
