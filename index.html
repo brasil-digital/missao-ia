@@ -203,13 +203,17 @@ footer.pais a { color: var(--azul); font-weight: 800; }
 <main id="app" aria-live="polite"></main>
 <footer class="pais">
   <p><b>Para pais e professores:</b> a Missão IA é um jogo do projeto Brasil Digital para crianças e adolescentes aprenderem a lidar com a inteligência artificial. São níveis de 8 fases e um desafio final, cada um com o seu certificado, e uma Missão do Mês nova sobre as novidades da IA. O progresso fica salvo só neste aparelho e o nome digitado no certificado não é enviado para lugar nenhum.</p>
-  <p>Um projeto <a href="https://brasildigital.online" target="_blank" rel="noopener">Brasil Digital</a>, moldando o futuro digital com segurança para todos. Oferecimento: app Fala Brasil, grátis na App Store e no Google Play.</p>
+  <p id="rodape-projeto">Um projeto <a href="https://brasildigital.online" target="_blank" rel="noopener">Brasil Digital</a>, moldando o futuro digital com segurança para todos. Oferecimento: app Fala Brasil, grátis na App Store e no Google Play.</p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const ICONE = "icone-fala-brasil.png";
+// Dentro do app Fala Brasil (iframe com ?app=1) não dá para baixar arquivo nem abrir link externo:
+// o PDF vai para a tela do app, que salva e abre o menu de compartilhar do celular.
+const NO_APP = new URLSearchParams(location.search).get("app") === "1" && window.parent !== window;
+if (NO_APP) document.getElementById("rodape-projeto").textContent = "Um projeto Brasil Digital, moldando o futuro digital com segurança para todos. Oferecimento: app Fala Brasil.";
 
 /* ---------- Conteúdo das fases ----------
    bin: dois botões (a/b); c = resposta certa ("a" ou "b").  mc: múltipla escolha; certa = índice em o.
@@ -1033,7 +1037,7 @@ function telaCertificado() {
   </section>
   <section class="cartao">
     ${bia("Baixe o certificado em PDF e mostre para a família e a escola! Você pode rejogar qualquer fase para ganhar mais estrelas e subir de nível.")}
-    <button class="btn" id="baixar-pdf">Baixar certificado em PDF</button>
+    <button class="btn" id="baixar-pdf">${NO_APP ? "Salvar ou compartilhar o certificado" : "Baixar certificado em PDF"}</button>
     <p class="suave centro" id="pdf-status" hidden></p>
     <div class="linha-botoes"><button class="btn sec" id="trocar-nome">Corrigir o nome</button><button class="btn sec" id="voltar-mapa">Voltar ao mapa</button></div>
   </section>`;
@@ -1058,8 +1062,13 @@ async function baixarPdf() {
     if (h > H - 2 * m) { h = H - 2 * m; w = h * canvas.width / canvas.height; }
     pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (W - w) / 2, (H - h) / 2, w, h);
     const arq = "Certificado-Missao-IA-Nivel-" + estado.certNivel + "-" + estado.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".pdf";
-    pdf.save(arq);
-    st.textContent = "Pronto! O PDF foi baixado.";
+    if (NO_APP) {
+      window.parent.postMessage({ voa: "pdf", nome: arq, data: pdf.output("datauristring") }, location.origin);
+      st.textContent = "Pronto! Escolha onde salvar ou com quem compartilhar.";
+    } else {
+      pdf.save(arq);
+      st.textContent = "Pronto! O PDF foi baixado.";
+    }
   } catch (e) {
     st.textContent = "Não deu para gerar o PDF neste aparelho. Tire um print da tela.";
   }
