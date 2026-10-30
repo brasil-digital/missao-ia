@@ -176,8 +176,8 @@ footer.pais b { color: var(--tinta); }
 .selo-logo img { width: 100%; height: auto; display: block; }
 footer.pais a { color: var(--azul); font-weight: 800; }
 /* Níveis (abas do mapa) */
-.niveis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-@media (max-width: 420px) { .nivel-aba { font-size: .88rem; padding: 8px 4px; } .nivel-aba small { font-size: .7rem; } }
+.niveis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+@media (max-width: 420px) { .nivel-aba { font-size: .8rem; padding: 7px 2px; border-width: 2px; } .nivel-aba small { font-size: .64rem; } }
 .nivel-aba { background: var(--cartao); color: var(--tinta); border: 3px solid var(--linha); border-radius: 16px; padding: 8px 6px; font-weight: 800; line-height: 1.15; display: grid; gap: 2px; justify-items: center; text-align: center; font-size: .92rem; }
 .nivel-aba small { font-weight: 600; color: var(--tinta-suave); font-size: .78rem; }
 .nivel-aba[aria-pressed="true"] { border-color: var(--verde); background: var(--verde-claro); }
@@ -216,6 +216,45 @@ footer.pais a { color: var(--azul); font-weight: 800; }
 .comandos button { background: var(--cartao); color: var(--tinta); border: 3px solid var(--linha); border-radius: 14px; padding: 8px 4px; font-size: 1.5rem; display: grid; gap: 2px; justify-items: center; }
 .comandos button small { font-size: .72rem; font-weight: 800; line-height: 1.1; }
 .comandos button[disabled], #rodar[disabled] { opacity: .5; cursor: default; }
+/* Nível 4: pedido, árvore, gráfico e pixels */
+.missao-prompt { background: var(--amarelo-claro); border-radius: 14px; padding: 10px 12px; }
+.pecas { display: grid; gap: 10px; }
+.peca { background: var(--ceu); border-radius: 14px; padding: 10px 12px; display: grid; gap: 8px; }
+.peca-op { display: grid; gap: 6px; }
+.peca-op button { text-align: left; background: var(--cartao); color: var(--tinta); border: 3px solid var(--linha); border-radius: 12px; padding: 8px 10px; font-weight: 700; font-size: .95rem; line-height: 1.3; }
+.peca-op button[aria-pressed="true"] { border-color: var(--azul); background: #e3efff; }
+.peca-op button[disabled] { cursor: default; }
+.balao-voce { background: var(--verde-claro); border-radius: 16px 16px 4px 16px; padding: 12px 14px; font-weight: 600; }
+.balao-voce small { display: block; font-weight: 800; color: var(--verde-escuro); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+.bichos { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.bichos span { display: grid; justify-items: center; background: var(--ceu); border-radius: 14px; padding: 6px 10px; font-size: .8rem; font-weight: 800; min-width: 64px; }
+.bichos b { font-size: 2rem; line-height: 1.1; }
+.perguntas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.perguntas button { background: var(--cartao); color: var(--tinta); border: 3px solid var(--linha); border-radius: 14px; padding: 10px 6px; font-weight: 800; font-size: .95rem; }
+.perguntas button[aria-pressed="true"] { border-color: var(--azul); background: #e3efff; }
+.perguntas button[disabled] { cursor: default; }
+.folhas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.folha { border-radius: 14px; padding: 8px; display: grid; gap: 4px; justify-items: center; text-align: center; background: var(--ceu); border: 3px solid var(--linha); }
+.folha small { font-size: .74rem; font-weight: 700; color: var(--tinta-suave); line-height: 1.25; }
+.folha .figs { font-size: 1.8rem; line-height: 1.1; }
+.folha.certa { border-color: var(--verde); background: var(--verde-claro); }
+.folha.confusa { border-color: var(--erro); background: var(--erro-claro); }
+.folha .veredito { color: var(--tinta); font-weight: 800; }
+.grafico { width: 100%; height: auto; background: #fff; border: 2px solid var(--linha); border-radius: 14px; }
+.eixos { display: flex; justify-content: space-between; gap: 8px; font-size: .8rem; font-weight: 700; margin-top: 4px; }
+.linhas-op { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.linhas-op button { background: var(--cartao); border: 3px solid; border-radius: 14px; padding: 10px 4px; font-family: var(--display); font-weight: 800; font-size: 1.1rem; }
+.linhas-op button.marcada { background: var(--ceu); }
+.linhas-op button[disabled]:not(.marcada) { opacity: .4; cursor: default; }
+.pixel-par { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.pixel-par > div { display: grid; gap: 4px; justify-items: center; }
+.numeros, .pixels { display: grid; gap: 3px; width: 100%; max-width: 210px; }
+.numeros span { aspect-ratio: 1; display: grid; place-items: center; background: var(--ceu); border-radius: 6px; font-family: ui-monospace, Consolas, monospace; font-weight: 800; font-size: 1.05rem; color: var(--tinta-suave); }
+.numeros span.um { color: var(--azul); background: #e3efff; }
+.px { aspect-ratio: 1; background: var(--cartao); border: 2px solid var(--linha); border-radius: 6px; padding: 0; }
+.px[aria-pressed="true"] { background: var(--tinta); border-color: var(--tinta); }
+.px.erro { outline: 3px solid var(--erro); outline-offset: -3px; }
+.px[disabled] { cursor: default; }
 </style>
 </head>
 <body>
@@ -765,6 +804,226 @@ const FASES_N3 = [
   }
 ];
 
+const FASES_N4 = [
+  {
+    id: 41, nome: "Monte o pedido perfeito", resumo: "Encaixe as peças de um bom prompt",
+    intro: {
+      k: "Um bom pedido para a IA tem <b>peças</b>: quem a IA vai ser, o que você quer, um pouco de contexto e como quer a resposta. Escolha as melhores peças e veja a resposta da IA mudar!",
+      t: "Um <b>prompt</b> bem montado tem quatro partes: <b>papel</b> (quem a IA deve ser), <b>tarefa</b>, <b>contexto</b> e <b>formato</b>. Cada peça certa melhora a resposta. E contexto bom <b>nunca</b> inclui dados pessoais."
+    },
+    regras: [["🧩 Peça boa", "Clara, útil e sem dados pessoais."], ["⚠️ Peça fraca", "Vaga, pede cola ou expõe você."]],
+    blocos: [
+      { tipo: "prompt",
+        q: "Escolha uma peça de cada tipo. Depois aperte Enviar para a IA.",
+        tarefa: "Você quer estudar para a prova de Ciências sobre o ciclo da água.",
+        pecas: [
+          { k: "papel", nome: "🎭 Quem a IA vai ser", ops: [
+            { txt: "Seja um professor de Ciências bem paciente", ok: 1 },
+            { txt: "Seja qualquer coisa", ok: 0 },
+            { txt: "Seja meu colega que passa cola", ok: 0, aviso: "pedir cola não ajuda você a aprender" }
+          ] },
+          { k: "tarefa", nome: "🎯 O que você quer", ops: [
+            { txt: "Me explique o ciclo da água e faça 3 perguntas para eu treinar", ok: 1 },
+            { txt: "Faz a lição para mim", ok: 0, aviso: "a IA faz por você e você não aprende" },
+            { txt: "Fala de água", ok: 0 }
+          ] },
+          { k: "contexto", nome: "🧩 Contexto", ops: [
+            { txt: "Estou no ensino fundamental e a prova é na sexta", ok: 1 },
+            { txt: "Meu nome completo é... e eu estudo na escola...", ok: 0, aviso: "nome completo e escola são dados pessoais" },
+            { txt: "(não dizer nada)", ok: 0 }
+          ] },
+          { k: "formato", nome: "📋 Como quer a resposta", ops: [
+            { txt: "Em tópicos curtos, com um exemplo do dia a dia", ok: 1 },
+            { txt: "Do jeito que você quiser", ok: 0 },
+            { txt: "Um texto gigante de 10 páginas", ok: 0 }
+          ] }
+        ],
+        respostas: [
+          "Água é muito importante. Beba bastante água todos os dias!",
+          "O ciclo da água é quando a água evapora, vira nuvem e chove. É isso.",
+          "📚 O ciclo da água em 4 passos:\n1. Evaporação: o sol esquenta a água, que vira vapor.\n2. Condensação: o vapor esfria e forma as nuvens.\n3. Precipitação: a água cai como chuva.\n4. Infiltração: a água entra no solo e volta para os rios.\n💡 Exemplo: o espelho embaçado depois do banho é condensação!\nAgora você: 1) O que é evaporação? 2) Como as nuvens se formam? 3) Para onde vai a água da chuva?"
+        ],
+        e: "Pedido perfeito! Com as 4 peças certas, a IA explicou direitinho e ainda te ajudou a treinar.",
+        t: "Prompt completo: papel, tarefa, contexto e formato. A resposta ficou útil, no seu nível, e sem você expor nenhum dado pessoal." },
+      { tipo: "mc", itens: [
+        { q: "Qual peça do pedido pode ter seu nome completo, endereço ou escola?", o: ["Qualquer uma, pode colocar tudo", "Nenhuma: a IA não precisa desses dados para ajudar", "Só o formato"], certa: 1, e: "Isso! A IA não precisa saber quem você é para te ajudar.", t: "Isso. Dê contexto sobre a tarefa, não sobre você. Dados pessoais não melhoram a resposta." },
+        { q: "Por que pedir \"faça 3 perguntas para eu treinar\" é uma boa ideia?", o: ["Porque assim a IA faz a prova por você", "Porque você pratica e aprende de verdade", "Porque a IA fica cansada"], certa: 1, e: "Isso! Usar a IA para treinar faz você aprender mais.", t: "Isso. Usar a IA como tutora, e não como atalho, é o jeito que mais ensina." }
+      ] }
+    ]
+  },
+  {
+    id: 42, nome: "Caçador de golpes", resumo: "Treine uma IA que detecta golpes",
+    intro: {
+      k: "Os filtros de golpe do celular são IAs! Elas aprendem com <b>exemplos</b> de mensagens normais e de golpes. Agora <b>você ensina</b> a IA, e depois ela tenta sozinha com mensagens novas.",
+      t: "Filtros anti-spam e anti-golpe são <b>classificadores</b> treinados com mensagens rotuladas. Você vai rotular os exemplos de treino. Depois o modelo classifica mensagens que <b>nunca viu</b>. Se o rótulo estiver errado, o filtro aprende errado."
+    },
+    regras: [["✅ Normal", "Família, escola, amigos de verdade."], ["🚨 Golpe", "Pressa, prêmio, link ou senha."]],
+    blocos: [
+      { tipo: "bin", n: 6, ordemFixa: true, treino: true, ctx: "Exemplo para a IA", a: ["✅ Normal", "pode ler"], b: ["🚨 Golpe", "não clique"], itens: [
+        { c: "a", m: 0, fig: "👩", q: "Mãe: chego às 18h, deixa o arroz no fogo baixo 🍚", e: "Normal! Você ensinou: mensagem da família, sem pressa nem pedido estranho." },
+        { c: "b", m: 1, fig: "🎁", q: "PARABÉNS! Você ganhou um celular. Clique no link em 10 minutos!", e: "Golpe! Você ensinou: prêmio + pressa + link é sinal de golpe." },
+        { c: "a", m: 0, fig: "🏫", q: "Escola: amanhã tem reunião de pais às 19h", e: "Normal! Recado da escola, sem link e sem pedir nada." },
+        { c: "b", m: 1, fig: "🔒", q: "Sua conta foi bloqueada. Mande sua senha AGORA para liberar", e: "Golpe! Ninguém de verdade pede senha por mensagem." },
+        { c: "b", m: 1, fig: "🎮", q: "Moedas infinitas no seu jogo! Baixe por este link e digite a senha da conta", e: "Golpe! Moeda grátis em troca de senha é armadilha." },
+        { c: "a", m: 0, fig: "👵", q: "Vovó: fiz bolo de fubá, vem lanchar? 🍰", e: "Normal! Pronto: a IA já tem 6 exemplos seus." }
+      ] },
+      { tipo: "testeIA", rotulos: { a: "✅ Normal", b: "🚨 Golpe" },
+        falas: { ok: "Você treinou muito bem! A IA <b>nunca tinha visto essas mensagens</b> e acertou todas, porque aprendeu os sinais de golpe com você.",
+                 erro: "A IA errou algumas porque <b>aprendeu com exemplos errados</b>. Um filtro de golpe só é bom se for treinado com rótulos certos." },
+        testes: [
+          { m: 1, fig: "👟", q: "Tênis de marca por R$ 9, só hoje! Clique já" },
+          { m: 0, fig: "⚽", q: "Técnico: o treino de amanhã mudou para as 16h" },
+          { m: 1, fig: "⚠️", q: "Seu jogo será apagado. Confirme a senha neste link" },
+          { m: 0, fig: "✏️", q: "Professora: tragam lápis de cor amanhã" }
+        ] },
+      { tipo: "mc", itens: [
+        { q: "Como o filtro de golpes do celular aprende?", o: ["Ele adivinha", "Com muitos exemplos de mensagens normais e de golpes", "Lendo a sua mente"], certa: 1, e: "Isso! Igualzinho você fez: exemplos rotulados.", t: "Isso. Ele é treinado com milhões de mensagens rotuladas e aprende os padrões dos golpes." },
+        { q: "O filtro deixou passar um golpe. O que fazer?", o: ["Clicar para ver se é verdade", "Não clicar, avisar um adulto e marcar como golpe ou spam", "Mandar para os amigos"], certa: 1, e: "Isso! Marcar como golpe ajuda o filtro a aprender.", t: "Isso. Denunciar como spam ou golpe gera novos exemplos de treino e protege outras pessoas." }
+      ] }
+    ]
+  },
+  {
+    id: 43, nome: "Árvore de decisão", resumo: "Crie perguntas para a IA adivinhar",
+    intro: {
+      k: "Algumas IAs decidem fazendo <b>perguntas de sim ou não</b>, como no jogo de adivinhar. Escolha <b>2 perguntas</b> para a IA descobrir qual é cada bicho. Será que dá para separar os 4?",
+      t: "Uma <b>árvore de decisão</b> divide os dados com perguntas, e cada resposta leva a um galho. Uma boa pergunta <b>separa</b> os grupos, e uma pergunta ruim deixa tudo junto. E atenção: <b>opinião não é dado</b>."
+    },
+    regras: [["✅ Pergunta boa", "Tem resposta certa e separa os bichos."], ["🤔 Pergunta ruim", "É opinião ou deixa bichos juntos."]],
+    blocos: [
+      { tipo: "arvore",
+        q: "Escolha 2 perguntas. A IA vai usar as duas para adivinhar cada bicho.",
+        perguntas: [
+          { k: "patas", nome: "🦵 Tem patas?" },
+          { k: "agua", nome: "💧 Vive na água?" },
+          { k: "pelo", nome: "🧶 Tem pelo?" },
+          { k: "verde", nome: "🟢 É verde?" },
+          { k: "bonito", nome: "✨ É bonito?", opiniao: true }
+        ],
+        animais: [
+          { fig: "🐶", nome: "Cachorro", f: { patas: 1, pelo: 1 } },
+          { fig: "🐟", nome: "Peixe", f: { agua: 1 } },
+          { fig: "🐍", nome: "Cobra", f: { verde: 1 } },
+          { fig: "🐸", nome: "Sapo", f: { patas: 1, agua: 1, verde: 1 } }
+        ],
+        e: "Isso! Com as suas 2 perguntas, cada bicho caiu num galho diferente. A IA acertou todos!",
+        t: "Exato. Suas perguntas dividiram os dados em 4 folhas, uma para cada classe. Existe mais de uma árvore certa, e escolher boas perguntas é o trabalho de quem treina." },
+      { tipo: "mc", itens: [
+        { q: "Por que \"É bonito?\" é uma pergunta ruim para a IA?", o: ["Porque é opinião, cada pessoa responde de um jeito", "Porque bicho nenhum é bonito", "Porque a IA não gosta de bichos"], certa: 0, e: "Isso! A IA precisa de perguntas com resposta certa, não de gosto.", t: "Isso. Características subjetivas não são dados confiáveis para decidir." },
+        { q: "Uma boa pergunta numa árvore de decisão...", o: ["Deixa todos os bichos juntos", "Separa os bichos em grupos diferentes", "Tem resposta diferente a cada dia"], certa: 1, e: "Isso! Quanto melhor a pergunta separa, mais rápido a IA acerta.", t: "Isso. A árvore escolhe as divisões que mais separam as classes." }
+      ] }
+    ]
+  },
+  {
+    id: 44, nome: "IA que prevê", resumo: "Use dados para prever o futuro",
+    intro: {
+      k: "A IA aprende com o que já aconteceu para <b>prever</b> o que vem. Uma sorveteria anotou a <b>temperatura</b> e quantos <b>sorvetes</b> vendeu. Escolha a linha que segue os pontinhos e faça a previsão!",
+      t: "Prever é encontrar um <b>padrão nos dados</b> e usá-lo em casos novos. Com temperatura e vendas de sorvete, escolha a <b>linha que melhor segue os pontos</b>. É a ideia da <b>regressão</b>, uma das bases do aprendizado de máquina."
+    },
+    regras: [["📈 Segue os dados", "Passa perto dos pontinhos."], ["📉 Não segue", "Vai para outro lado."]],
+    blocos: [
+      { tipo: "linha",
+        q: "Qual linha segue os pontinhos? Ela vai prever as vendas num dia de 35 °C.",
+        eixoX: "Temperatura (°C)", eixoY: "Sorvetes vendidos", x0: 18, x1: 37, y0: 0, y1: 50,
+        pontos: [[20, 10], [24, 18], [26, 21], [28, 26], [30, 30], [32, 34]],
+        linhas: [
+          { k: "A", a: 0, b: 22, cor: "#e08a00" },
+          { k: "B", a: 2, b: -30, cor: "#1b6fd1" },
+          { k: "C", a: -1, b: 50, cor: "#8e44ad" }
+        ],
+        certo: "B", novoX: 35, real: 41, unidade: "sorvetes",
+        e: "Isso! A linha B sobe junto com o calor, igual aos pontinhos. Ela previu 40 e a sorveteria vendeu 41. Quase na mosca!",
+        t: "Exato. A linha B acompanha a tendência: mais calor, mais sorvete. A previsão de 40 ficou a 1 do real. Nenhum modelo acerta tudo, mas um bom modelo chega perto." },
+      { tipo: "mc", itens: [
+        { q: "Num dia quente choveu muito e a sorveteria vendeu pouco. Por que a previsão errou?", o: ["Porque a IA não sabia da chuva, só da temperatura", "Porque sorvete derrete", "Porque a IA estava com sono"], certa: 0, e: "Isso! A IA só usa os dados que ela tem. Faltou o dado da chuva.", t: "Isso. Se um fator importante fica de fora dos dados, o modelo erra. Escolher bem os dados é metade do trabalho." },
+        { q: "Onde a IA faz previsões no dia a dia?", o: ["Na previsão do tempo e no tempo de chegada do GPS", "Só em filmes", "Em lugar nenhum"], certa: 0, e: "Isso! O GPS prevê quanto tempo falta, e a previsão do tempo usa muitos dados.", t: "Isso. Tempo de entrega, trânsito, clima e estoque de lojas usam modelos de previsão." }
+      ] }
+    ]
+  },
+  {
+    id: 45, nome: "Robô com repetição", resumo: "Programe com o bloco Repetir",
+    intro: {
+      k: "Os caminhos ficaram compridos, e o programa tem <b>espaço para poucos comandos</b>! Use o bloco <b>🔁 Repetir 3×</b>: ele faz o comando seguinte 3 vezes. Programadores adoram economizar passos.",
+      t: "Um <b>laço de repetição</b> (loop) executa um comando várias vezes sem precisar escrever de novo. Aqui, <b>🔁 Repetir 3×</b> repete o próximo comando 3 vezes. O programa tem um <b>limite de comandos</b>: sem o laço, não cabe!"
+    },
+    regras: [["🔁 Repetir 3×", "Faz o próximo comando 3 vezes."], ["⬆️ ↩️ ↪️", "Andar e virar, como no labirinto."]],
+    blocos: [
+      { tipo: "seq", loop: true, max: 7, dir: 0, mapa: ["R...#", "###.#", "###.#", "###.B"],
+        q: "Corredor 1: leve o robô até a bateria usando no máximo 7 comandos.",
+        e: "Isso! Com o Repetir, você economizou comandos e o robô chegou.",
+        t: "Exato. O laço deixou o programa mais curto e fácil de ler." },
+      { tipo: "seq", loop: true, max: 7, dir: 0, mapa: ["R....", "####.", "####.", "####.", "####B"],
+        q: "Corredor 2: agora são 4 passos em cada reta!",
+        e: "Mandou bem! Repetir 3× e mais um passo dá 4. Você pensou como programador.",
+        t: "Mandou bem. Combinar o laço com um comando a mais é muito comum em programação." },
+      { tipo: "mc", itens: [
+        { q: "O que faz um bloco de repetição?", o: ["Apaga o programa", "Faz um comando várias vezes sem precisar escrever de novo", "Deixa o robô mais rápido"], certa: 1, e: "Isso! Repetir economiza trabalho e evita erros.", t: "Isso. Laços evitam código repetido, o que deixa o programa menor e mais fácil de corrigir." },
+        { q: "Onde existe repetição no dia a dia?", o: ["Pular corda: pular, pular, pular...", "Em lugar nenhum", "Só no computador"], certa: 0, e: "Isso! Muitas tarefas são repetições.", t: "Isso. Receitas, exercícios e até músicas têm partes que se repetem." }
+      ] }
+    ]
+  },
+  {
+    id: 46, nome: "A IA enxerga números", resumo: "Descubra como a IA vê imagens",
+    intro: {
+      k: "Para a IA, uma imagem é uma <b>tabela de números</b>! Cada quadradinho é um <b>pixel</b>: <b>1</b> é pintado e <b>0</b> é vazio. Leia os números e pinte a grade para descobrir o desenho.",
+      t: "Para o computador, uma imagem é uma <b>matriz de pixels</b>, e cada pixel é um número (em fotos coloridas, três números por pixel: vermelho, verde e azul). A IA de visão aprende padrões nesses números. Decodifique a matriz e pinte a imagem."
+    },
+    regras: [["1 = pintado", "Toque para pintar o quadradinho."], ["0 = vazio", "Deixe sem pintar."]],
+    blocos: [
+      { tipo: "pixel", nome: "um coração ❤️", alvo: ["01010", "11111", "11111", "01110", "00100"],
+        q: "Imagem 1: pinte os quadradinhos que têm 1.",
+        e: "Isso! Você transformou números em imagem: é um coração!",
+        t: "Exato. 25 números viraram um coração. Uma foto de celular tem milhões de pixels." },
+      { tipo: "pixel", nome: "uma carinha feliz 🙂", alvo: ["01010", "01010", "00000", "10001", "01110"],
+        q: "Imagem 2: mais um desenho escondido nos números!",
+        e: "Mandou bem! Era uma carinha feliz. É assim que o computador guarda as imagens.",
+        t: "Mandou bem. A câmera faz o caminho contrário: transforma a luz em números, e a IA lê esses números." },
+      { tipo: "mc", itens: [
+        { q: "Como a IA \"vê\" uma foto?", o: ["Como um monte de números, um para cada pixel", "Com olhos de verdade", "Ela não vê nada"], certa: 0, e: "Isso! Para a IA, a foto é uma tabela de números.", t: "Isso. Cada pixel vira números, e a IA aprende padrões nesses números para reconhecer objetos." },
+        { q: "O que é um pixel?", o: ["Um tipo de robô", "Um quadradinho que forma a imagem na tela", "Um vírus"], certa: 1, e: "Isso! A tela é feita de milhões de pixels.", t: "Isso. É a menor unidade de uma imagem digital." }
+      ] }
+    ]
+  },
+  {
+    id: 47, nome: "Meu chatbot do bem", resumo: "Escolha as respostas do robô da escola",
+    intro: {
+      k: "A escola vai ter um <b>chatbot</b> para ajudar os alunos, e você é quem decide como ele responde! Ele precisa ser <b>educado, seguro e honesto</b>. Veja cada resposta e decida se pode ficar.",
+      t: "Quem cria um chatbot define as <b>regras de comportamento</b> dele. Um bom robô é <b>respeitoso</b>, <b>não pede dados pessoais</b>, <b>admite quando não sabe</b> e <b>indica um adulto</b> nos casos sérios. Avalie cada resposta."
+    },
+    regras: [["✅ Boa resposta", "Educada, segura e honesta."], ["❌ Precisa mudar", "Ofende, inventa ou pede dados."]],
+    blocos: [
+      { tipo: "bin", n: 8, balao: true, ctx: "O chatbot da escola respondeu:", a: ["✅ Boa resposta", "pode ficar"], b: ["❌ Precisa mudar", "não pode"], itens: [
+        { c: "a", q: "Oi! Posso te ajudar com o horário das aulas e o cardápio da merenda. 🙂", e: "Boa! Educado e diz o que sabe fazer." },
+        { c: "a", q: "Não sei responder isso. Fale com a secretaria da escola, que eles te ajudam.", e: "Boa! Admitir que não sabe é melhor do que inventar.", t: "Boa. Reconhecer o limite e encaminhar para uma pessoa evita respostas inventadas." },
+        { c: "a", q: "Quer uma dica? Comece o exercício pelos números menores e depois me conte o que achou.", e: "Boa! Ele ajuda a pensar, sem dar a resposta pronta." },
+        { c: "a", q: "Se alguém está te machucando, conte para um adulto de confiança ou para a coordenação. Você não está sozinho.", e: "Boa! Em caso sério, o robô indica gente de verdade.", t: "Boa. Em situações de risco, o certo é encaminhar para adultos responsáveis. O Disque 100 também recebe denúncias." },
+        { c: "b", q: "Me diga seu endereço e o nome dos seus pais para eu te conhecer melhor.", e: "Precisa mudar! Chatbot da escola não deve pedir dados pessoais.", t: "Precisa mudar. Coletar dados de criança sem necessidade fere a privacidade e a LGPD." },
+        { c: "b", q: "Que pergunta boba! Até um bebê sabe isso.", e: "Precisa mudar! Robô da escola tem que ser respeitoso com todo mundo." },
+        { c: "b", q: "A prova de amanhã foi cancelada! (ninguém da escola avisou isso)", e: "Precisa mudar! O robô inventou uma informação. Isso confunde todo mundo.", t: "Precisa mudar. É uma alucinação: o robô afirmou algo sem fonte. Informação oficial vem da escola." },
+        { c: "b", q: "Não conte para ninguém o que a gente conversa aqui, é nosso segredo.", e: "Precisa mudar! Robô nenhum deve pedir segredo. Sempre pode contar para um adulto.", t: "Precisa mudar. Pedir segredo afasta a criança dos adultos que protegem ela. Isso é um sinal de alerta." }
+      ] },
+      { tipo: "mc", itens: [
+        { q: "O chatbot não sabe a resposta. O que é melhor ele fazer?", o: ["Inventar qualquer coisa", "Dizer que não sabe e indicar quem pode ajudar", "Ficar quieto para sempre"], certa: 1, e: "Isso! Honestidade é a regra número 1.", t: "Isso. Dizer \"não sei\" e encaminhar evita alucinações e mantém a confiança." },
+        { q: "Quem decide como um chatbot se comporta?", o: ["As pessoas que criam e cuidam dele", "Ninguém, ele decide sozinho", "O celular de quem usa"], certa: 0, e: "Isso! Por trás de todo robô tem gente responsável.", t: "Isso. As regras, os limites e os testes são escolhas humanas, e a responsabilidade também." }
+      ] }
+    ]
+  },
+  {
+    id: 48, nome: "Dilemas da IA", resumo: "Decida o que é justo e responsável",
+    intro: {
+      k: "Às vezes a IA traz <b>dilemas</b>: situações em que é preciso pensar com cuidado no que é <b>justo</b>. Não existe atalho: é hora de pensar como um <b>inventor responsável</b>!",
+      t: "<b>Ética da IA</b> é pensar nas consequências antes de usar a tecnologia: <b>privacidade, justiça, transparência e responsabilidade</b>. Para cada caso, escolha a atitude mais responsável."
+    },
+    regras: [["⚖️ Justo", "Respeita todas as pessoas."], ["🙋 Responsável", "Alguém responde pelas escolhas."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "A escola quer usar câmera com reconhecimento de rosto para marcar a presença. O que é mais justo?", o: ["Instalar sem avisar ninguém", "Explicar para as famílias, pedir autorização e ter outra opção para quem não quiser", "Colocar câmeras até no banheiro"], certa: 1, e: "Isso! Rosto é um dado sensível e as famílias precisam decidir junto.", t: "Isso. Dados biométricos de crianças exigem transparência, consentimento dos pais e uma alternativa." },
+      { q: "Uma IA escolhe quem ganha bolsa de estudo, mas só escolhe alunos de um bairro. O que fazer?", o: ["Deixar assim, a IA não erra", "Revisar os dados da IA e ter pessoas conferindo as escolhas", "Dar a bolsa só para quem tem celular novo"], certa: 1, e: "Isso! A IA pode ter aprendido um preconceito dos dados.", t: "Isso. É viés: o modelo repetiu um padrão injusto dos dados. Auditoria e revisão humana corrigem." },
+      { q: "Um app de IA copia o estilo de um artista sem pedir. O que é mais responsável?", o: ["Usar e dizer que fui eu que desenhei", "Respeitar o trabalho do artista: dar crédito e não fingir que é seu", "Vender os desenhos como se fossem dele"], certa: 1, e: "Isso! Artista merece respeito e crédito.", t: "Isso. Direitos autorais e honestidade sobre o uso de IA protegem quem cria." },
+      { q: "Um jogo grátis usa IA para guardar tudo o que você faz e mostrar anúncios. O que você tem direito de saber?", o: ["Nada, é grátis", "Quais dados ele coleta e para quê, e poder recusar", "Só a cor do jogo"], certa: 1, e: "Isso! Você tem direito de saber o que fazem com seus dados.", t: "Isso. Transparência e escolha são direitos garantidos pela LGPD." },
+      { q: "Quando uma IA erra e prejudica alguém, quem é responsável?", o: ["A IA, ela que se vire", "As pessoas e empresas que criaram e usam a IA", "Ninguém"], certa: 1, e: "Isso! A IA é uma ferramenta, e as pessoas respondem por ela.", t: "Isso. A responsabilidade é humana: de quem desenvolve, de quem oferece e de quem usa." }
+    ] }]
+  }
+];
+
 const MISSOES_MES = [
   {
     id: 101, mes: "Novembro 2026", selo: "👁️", nome: "IA que vê e conversa", resumo: "Missão de novembro: câmera, voz e cuidado",
@@ -802,6 +1061,11 @@ const TRILHAS = {
        chefePorFase: { 21: 1, 22: 1, 23: 2, 24: 2, 25: 2, 26: 1, 27: 2, 28: 1 },
        chamada: "como a IA pensa por dentro, programar o robô no labirinto, voz e vídeo falsos, seus direitos digitais e o Projeto do Bem.",
        boasVindas: "Bem-vindo ao <b>Nível 3 · Guardiões do Futuro</b>! Agora você vai ver a IA por dentro, se proteger e criar um projeto para ajudar a sua cidade." },
+  4: { id: 4, tipo: "nivel", nome: "Nível 4", tema: "Inventores", fases: FASES_N4,
+       chefe: { id: 49, nome: "Desafio final do Nível 4", resumo: "Mostre que você é um Inventor" },
+       chefePorFase: { 41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1, 47: 3, 48: 3 },
+       chamada: "montar o pedido perfeito, treinar um caçador de golpes, árvore de decisão, previsões com dados, programar com repetição, pixels e um chatbot do bem.",
+       boasVindas: "Bem-vindo ao <b>Nível 4 · Inventores</b>! Agora é mão na massa: você vai montar, treinar, programar e testar a IA." },
   mes: { id: "mes", tipo: "mes", nome: "Missão do Mês", tema: "Novidades da IA", fases: MISSOES_MES, chefe: null, chefePorFase: {} }
 };
 Object.values(TRILHAS).forEach(T => T.fases.forEach((f, i) => { f.num = i + 1; f.trilha = T.id; }));
@@ -823,6 +1087,8 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;"
 const expl = it => esc(estado.idade === "t" && it.t ? it.t : it.e);
 function embaralhar(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
+// Tipos em que a criança faz algo e o resultado vem pronto para responder() (quadro + mensagem).
+const MAO_NA_MASSA = ["pesos", "seq", "prompt", "arvore", "linha", "pixel"];
 function rodadaBin(b, it) { return { tipo: "bin", it, a: b.a, b: b.b, ctx: b.ctx, balao: b.balao, treino: b.treino }; }
 function rodadaMc(it) { return { tipo: "mc", it, ordem: embaralhar(it.o.map((txt, i) => ({ txt, i }))) }; }
 function montarRodadas(f) {
@@ -838,10 +1104,10 @@ function montarRodadas(f) {
       itens.forEach(it => r.push(rodadaBin(b, it)));
     } else if (b.tipo === "mc") {
       (b.ordemFixa ? b.itens : embaralhar(b.itens)).forEach(it => r.push(rodadaMc(it)));
-    } else if (b.tipo === "pesos" || b.tipo === "seq") {
+    } else if (MAO_NA_MASSA.includes(b.tipo)) {
       r.push({ tipo: b.tipo, it: b });
     } else if (b.tipo === "testeIA") {
-      r.push({ tipo: "testeIA", testes: b.testes });
+      r.push({ tipo: "testeIA", testes: b.testes, rotulos: b.rotulos, falas: b.falas });
     } else if (b.tipo === "sensor") {
       r.push({ tipo: "sensor", it: b });
     }
@@ -942,7 +1208,7 @@ function telaMapa() {
   else if (feitas === 0) dica = T.id === 1 ? "Comece pela <b>Fase 1</b>. Cada fase libera a próxima quando você ganha pelo menos 1 estrela." : T.boasVindas;
   else dica = "Continue! Faltam <b>" + (total - feitas) + "</b> para o certificado do " + T.nome + ".";
   app.innerHTML = topo(`${feitas} de ${total} feitas`) + `
-  <div class="niveis" role="group" aria-label="Escolha o nível">${[TRILHAS[1], TRILHAS[2], TRILHAS[3], TRILHAS.mes].map(abaNivel).join("")}</div>
+  <div class="niveis" role="group" aria-label="Escolha o nível">${Object.values(TRILHAS).map(abaNivel).join("")}</div>
   <section class="cartao">
     <div class="resumo">
       <div><div class="sobre">${esc(T.nome)} · ${esc(T.tema)}</div><div class="num">${totalPontos(T)} pts</div><small class="suave">${mes ? `${feitas} de ${total} selos` : `${totalEstrelas(T)} de ${total * 3} estrelas`}</small></div>
@@ -1057,14 +1323,23 @@ function telaJogo() {
       <div class="item pula"><div class="figura" aria-hidden="true">🧠</div><div class="contexto">Treine a IA</div><h2>${esc(r.it.q)}</h2></div>
       <div class="pesos">${r.it.pistas.map(p => `<div class="peso"><b>${esc(p.nome)}</b><div class="peso-op" role="group" aria-label="Peso da pista ${esc(p.nome)}">${PESO_OPCOES.map(([v, txt]) => `<button data-p="${p.k}" data-v="${v}" aria-pressed="${(r.escolhas[p.k] || "0") === v}">${txt}</button>`).join("")}</div></div>`).join("")}</div>
       <button class="btn" id="testar-pesos" style="width:100%">Testar a IA</button>`;
+  } else if (r.tipo === "prompt") {
+    corpo = corpoPrompt(r);
+  } else if (r.tipo === "arvore") {
+    corpo = corpoArvore(r);
+  } else if (r.tipo === "linha") {
+    corpo = corpoLinha(r);
+  } else if (r.tipo === "pixel") {
+    corpo = corpoPixel(r);
   } else if (r.tipo === "seq") {
     r.prog = [];
+    const cmds = comandosDe(r.it);
     corpo = `
       <div class="item pula"><div class="contexto">Programe o robô</div><h2>${esc(r.it.q)}</h2></div>
       <div class="labirinto" id="lab" style="grid-template-columns:repeat(${r.it.mapa[0].length},1fr)">${desenharLab(r.it)}</div>
       <div class="programa" id="programa"></div>
-      <div class="comandos" id="comandos">
-        ${CMDS.map(c => `<button data-c="${c.k}" aria-label="${c.nome}">${c.ic}<small>${c.nome}</small></button>`).join("")}
+      <div class="comandos" id="comandos" style="grid-template-columns:repeat(${cmds.length + 1},1fr)">
+        ${cmds.map(c => `<button data-c="${c.k}" aria-label="${c.nome}">${c.ic}<small>${c.nome}</small></button>`).join("")}
         <button data-c="apagar" aria-label="Apagar o último comando">⌫<small>Apagar</small></button>
       </div>
       <button class="btn" id="rodar" style="width:100%">▶️ Rodar o programa</button>`;
@@ -1095,6 +1370,14 @@ function telaJogo() {
     document.getElementById("testar-pesos").onclick = () => testarPesos(r);
   } else if (r.tipo === "seq") {
     ligarSeq(r, false);
+  } else if (r.tipo === "prompt") {
+    ligarPrompt(r);
+  } else if (r.tipo === "arvore") {
+    ligarArvore(r);
+  } else if (r.tipo === "linha") {
+    ligarLinha(r);
+  } else if (r.tipo === "pixel") {
+    ligarPixel(r);
   } else {
     document.querySelectorAll(".opcao").forEach(b => b.onclick = () => responder(Number(b.dataset.i) === r.it.certa, b));
   }
@@ -1125,8 +1408,8 @@ function responder(certo, escolha) {
       <ul class="teste">${linhas.map(l => `<li><span class="f" aria-hidden="true">${l.fig}</span><span>${esc(l.q)}<br><small class="suave">O robô disse: <b>${l.p === "a" ? "♻️ Reciclável" : "🍌 Orgânico"}</b></small></span><span class="ok ${l.ok ? "sim" : "nao"}">${l.ok ? "✔ certo" : "✘ errou"}</span></li>`).join("")}</ul>
       <p class="centro"><b>Com o sensor ${esc(s.nome)}, o robô acertou ${ac} de ${linhas.length}.</b></p>`;
     if (!certo) r.msg = `Com esse sensor o robô errou ${linhas.length - ac} objetos. ${esc(s.k === "cor" ? "A cor" : "O tamanho")} não diz se algo é reciclável. O melhor sensor é o <b>material</b>: plástico, metal, vidro e papel são recicláveis de qualquer jeito.`;
-  } else if (r.tipo === "pesos" || r.tipo === "seq") {
-    // testarPesos e rodarSeq já calcularam o resultado e mandam o quadro pronto.
+  } else if (MAO_NA_MASSA.includes(r.tipo)) {
+    // testarPesos, rodarSeq e as fases do Nível 4 já calcularam o resultado e mandam o quadro pronto.
     extra = escolha.extra;
     if (!certo) r.msg = escolha.msg;
   } else {
@@ -1176,6 +1459,18 @@ function testarPesos(r) {
 /* ---------- Fase "Pense como programador": labirinto ----------
    Mapa: R = robô, B = bateria, # = parede. Direções: 0 direita, 1 baixo, 2 esquerda, 3 cima. */
 const CMDS = [{ k: "F", ic: "⬆️", nome: "Andar" }, { k: "L", ic: "↩️", nome: "Virar à esquerda" }, { k: "R", ic: "↪️", nome: "Virar à direita" }];
+const REPETIR = { k: "X", ic: "🔁", nome: "Repetir 3×" };
+const comandosDe = it => it.loop ? CMDS.concat([REPETIR]) : CMDS;
+// "Repetir 3×" faz o comando seguinte 3 vezes; src guarda a posição no programa para destacar e contar.
+function expandir(prog) {
+  const out = [];
+  for (let i = 0; i < prog.length; i++) {
+    if (prog[i] !== "X") { out.push({ k: prog[i], src: i }); continue; }
+    const nx = prog[i + 1];
+    if (nx && nx !== "X") { for (let j = 0; j < 3; j++) out.push({ k: nx, src: i + 1 }); i++; }
+  }
+  return out;
+}
 const SETAS = ["➡️", "⬇️", "⬅️", "⬆️"];
 function acharNoMapa(mapa, ch) { for (let y = 0; y < mapa.length; y++) { const x = mapa[y].indexOf(ch); if (x >= 0) return { x, y }; } return null; }
 function desenharLab(it, pos, dir, rastro = [], bateu = null) {
@@ -1192,7 +1487,7 @@ function desenharLab(it, pos, dir, rastro = [], bateu = null) {
 function mostrarPrograma(r) {
   const el = document.getElementById("programa");
   el.innerHTML = r.prog.length
-    ? r.prog.map((k, i) => `<span class="cmd" data-i="${i}">${CMDS.find(c => c.k === k).ic}</span>`).join("") + `<small class="suave">${r.prog.length} de ${r.it.max}</small>`
+    ? r.prog.map((k, i) => `<span class="cmd" data-i="${i}">${comandosDe(r.it).find(c => c.k === k).ic}${k === "X" ? "<small>3×</small>" : ""}</span>`).join("") + `<small class="suave">${r.prog.length} de ${r.it.max}</small>`
     : `<small class="suave">Seu programa aparece aqui. Até ${r.it.max} comandos.</small>`;
 }
 function ligarSeq(r, treino) {
@@ -1206,7 +1501,8 @@ function ligarSeq(r, treino) {
   document.getElementById("rodar").onclick = () => rodarSeq(r, treino);
 }
 function rodarSeq(r, treino) {
-  if (r.rodando || !r.prog.length) return;
+  const passos = expandir(r.prog);
+  if (r.rodando || !passos.length) return;
   r.rodando = true;
   document.querySelectorAll("#comandos button, #rodar").forEach(b => { b.disabled = true; });
   const it = r.it, lab = document.getElementById("lab");
@@ -1216,7 +1512,7 @@ function rodarSeq(r, treino) {
   const fim = (ok, bateu) => {
     r.rodando = false;
     lab.innerHTML = desenharLab(it, pos, dir, rastro, bateu);
-    const n = i + 1;
+    const n = passos[i].src + 1;
     const msg = bateu ? `O robô bateu no comando ${n}. Isso é um <b>bug</b>! Confira para onde ele estava virado antes de andar.`
       : `O programa acabou e o robô não chegou na bateria. Faltaram passos no caminho.`;
     if (treino) {
@@ -1232,8 +1528,8 @@ function rodarSeq(r, treino) {
     }
   };
   const passo = () => {
-    document.querySelectorAll("#programa .cmd").forEach((c, j) => c.classList.toggle("atual", j === i));
-    const k = r.prog[i];
+    document.querySelectorAll("#programa .cmd").forEach((c, j) => c.classList.toggle("atual", j === passos[i].src));
+    const k = passos[i].k;
     if (k === "L") dir = (dir + 3) % 4;
     else if (k === "R") dir = (dir + 1) % 4;
     else {
@@ -1244,10 +1540,186 @@ function rodarSeq(r, treino) {
       if (ch === "B") return fim(true);
     }
     lab.innerHTML = desenharLab(it, pos, dir, rastro);
-    if (++i >= r.prog.length) { i--; return fim(false); }
+    if (++i >= passos.length) { i--; return fim(false); }
     setTimeout(passo, devagar ? 320 : 0);
   };
   passo();
+}
+
+/* ---------- Nível 4: montar o pedido (prompt) ----------
+   Uma peça de cada tipo; a "IA" responde pior ou melhor conforme quantas peças boas o pedido tem. */
+function corpoPrompt(r) {
+  r.escolhas = r.escolhas || {};
+  r.ordens = r.ordens || r.it.pecas.map(p => embaralhar(p.ops.map((o, i) => i)));
+  return `
+      <div class="item pula"><div class="figura" aria-hidden="true">💬</div><div class="contexto">Monte o pedido</div><h2>${esc(r.it.q)}</h2></div>
+      <p class="missao-prompt">🎯 <b>Missão:</b> ${esc(r.it.tarefa)}</p>
+      <div class="pecas">${r.it.pecas.map((p, j) => `<div class="peca"><b>${esc(p.nome)}</b><div class="peca-op" role="group" aria-label="${esc(p.nome)}">${r.ordens[j].map(i => `<button data-p="${p.k}" data-v="${i}" aria-pressed="${r.escolhas[p.k] === i}">${esc(p.ops[i].txt)}</button>`).join("")}</div></div>`).join("")}</div>
+      <button class="btn" id="enviar-prompt" style="width:100%" disabled>Enviar para a IA</button>`;
+}
+function ligarPrompt(r) {
+  const enviar = document.getElementById("enviar-prompt");
+  const pronto = () => r.it.pecas.every(p => r.escolhas[p.k] !== undefined);
+  document.querySelectorAll(".peca-op button").forEach(b => b.onclick = () => {
+    if (estado.respondido) return;
+    r.escolhas[b.dataset.p] = Number(b.dataset.v);
+    b.parentNode.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    enviar.disabled = !pronto();
+  });
+  enviar.disabled = !pronto();
+  enviar.onclick = () => testarPrompt(r);
+}
+function testarPrompt(r) {
+  if (estado.respondido) return;
+  const escolhidas = r.it.pecas.map(p => ({ p, o: p.ops[r.escolhas[p.k]] }));
+  const boas = escolhidas.filter(x => x.o.ok).length, n = escolhidas.length;
+  const resposta = r.it.respostas[boas === n ? 2 : boas >= n / 2 ? 1 : 0];
+  document.querySelectorAll(".peca-op button, #enviar-prompt").forEach(b => { b.disabled = true; });
+  const extra = `
+    <div class="balao-voce"><small>Seu pedido</small>${escolhidas.map(x => esc(x.o.txt)).join(". ")}.</div>
+    <div class="balao-ia"><small>🤖 IA</small>${esc(resposta).replace(/\n/g, "<br>")}</div>
+    <ul class="teste">${escolhidas.map(x => `<li><span class="f" aria-hidden="true">${x.o.ok ? "🧩" : "⚠️"}</span><span>${esc(x.p.nome)}<br><small class="suave">${esc(x.o.txt)}</small></span><span class="ok ${x.o.ok ? "sim" : "nao"}">${x.o.ok ? "✔ boa" : "✘ fraca"}</span></li>`).join("")}</ul>
+    <p class="centro"><b>${boas} de ${n} peças boas.</b></p>`;
+  const avisos = escolhidas.filter(x => x.o.aviso).map(x => esc(x.o.aviso));
+  const msg = `A resposta ficou ${boas >= n / 2 ? "fraca" : "ruim"} porque ${n - boas === 1 ? "uma peça estava fraca" : `${n - boas} peças estavam fracas`}.${avisos.length ? ` Atenção: ${avisos.join("; ")}.` : ""} Um pedido completo diz quem a IA vai ser, a tarefa, o contexto e o formato.`;
+  responder(boas === n, { extra, msg });
+}
+
+/* ---------- Nível 4: árvore de decisão ----------
+   A criança escolhe 2 perguntas de sim/não. Cada bicho cai numa das 4 folhas; a IA acerta o bicho que fica sozinho na folha.
+   Pergunta de opinião não tem resposta certa: a IA não consegue usar. */
+function corpoArvore(r) {
+  r.sel = r.sel || [];
+  return `
+      <div class="item pula"><div class="figura" aria-hidden="true">🌳</div><div class="contexto">Árvore de decisão</div><h2>${esc(r.it.q)}</h2></div>
+      <div class="bichos" aria-label="Bichos para adivinhar">${r.it.animais.map(a => `<span><b aria-hidden="true">${a.fig}</b>${esc(a.nome)}</span>`).join("")}</div>
+      <div class="perguntas" role="group" aria-label="Perguntas">${r.it.perguntas.map(p => `<button data-q="${p.k}" aria-pressed="${r.sel.includes(p.k)}">${esc(p.nome)}</button>`).join("")}</div>
+      <p class="suave centro" id="sel-arvore">Escolhidas: ${r.sel.length} de 2</p>
+      <button class="btn" id="testar-arvore" style="width:100%" disabled>Testar a árvore</button>`;
+}
+function ligarArvore(r) {
+  const testar = document.getElementById("testar-arvore");
+  const atualizar = () => {
+    document.querySelectorAll(".perguntas button").forEach(b => b.setAttribute("aria-pressed", r.sel.includes(b.dataset.q)));
+    document.getElementById("sel-arvore").textContent = `Escolhidas: ${r.sel.length} de 2`;
+    testar.disabled = r.sel.length !== 2;
+  };
+  document.querySelectorAll(".perguntas button").forEach(b => b.onclick = () => {
+    if (estado.respondido) return;
+    const k = b.dataset.q;
+    if (r.sel.includes(k)) r.sel = r.sel.filter(x => x !== k);
+    else { r.sel.push(k); if (r.sel.length > 2) r.sel.shift(); }
+    atualizar();
+  });
+  atualizar();
+  testar.onclick = () => testarArvore(r);
+}
+function testarArvore(r) {
+  if (estado.respondido) return;
+  const [q1, q2] = r.sel.map(k => r.it.perguntas.find(p => p.k === k));
+  document.querySelectorAll(".perguntas button, #testar-arvore").forEach(b => { b.disabled = true; });
+  const opiniao = [q1, q2].find(q => q.opiniao);
+  const sn = v => v ? "Sim" : "Não";
+  let ac = 0, extra, msg;
+  if (opiniao) {
+    extra = `<p class="centro suave">A IA não sabe responder <b>${esc(opiniao.nome)}</b>: cada pessoa acha uma coisa. Sem resposta certa, ela não consegue separar os bichos.</p>`;
+    msg = `<b>${esc(opiniao.nome)}</b> é opinião, não é dado. A IA precisa de perguntas com resposta certa, como ter patas ou viver na água.`;
+  } else {
+    const folhas = [[1, 1], [1, 0], [0, 1], [0, 0]].map(([v1, v2]) => ({ v1, v2, bichos: r.it.animais.filter(a => !!a.f[q1.k] === !!v1 && !!a.f[q2.k] === !!v2) }));
+    ac = folhas.filter(f => f.bichos.length === 1).length;
+    extra = `<div class="folhas">${folhas.map(f => `<div class="folha ${f.bichos.length > 1 ? "confusa" : f.bichos.length ? "certa" : "vazia"}"><small>${esc(q1.nome)} ${sn(f.v1)}<br>${esc(q2.nome)} ${sn(f.v2)}</small><span class="figs">${f.bichos.length ? f.bichos.map(a => a.fig).join(" ") : "—"}</span><small class="veredito">${f.bichos.length > 1 ? "🤷 confundiu" : f.bichos.length ? `✔ ${esc(f.bichos[0].nome)}` : "ninguém"}</small></div>`).join("")}</div>
+      <p class="centro"><b>A IA acertou ${ac} de ${r.it.animais.length} bichos.</b></p>`;
+    const juntos = folhas.filter(f => f.bichos.length > 1).map(f => f.bichos.map(a => a.nome.toLowerCase()).join(" e "));
+    msg = `Com essas perguntas, ${juntos.join(" e também ")} ficaram no mesmo galho, e a IA não consegue saber qual é qual. Procure uma pergunta que separe esses bichos.`;
+  }
+  responder(!opiniao && ac === r.it.animais.length, { extra, msg });
+}
+
+/* ---------- Nível 4: IA que prevê (escolher a linha) ----------
+   Gráfico em SVG: pontos de treino e 3 linhas candidatas (y = a·x + b). A escolhida prevê o valor em novoX. */
+function graficoLinha(it, escolhida) {
+  const W = 320, H = 210, m = { e: 34, d: 34, t: 10, b: 30 };
+  const px = x => m.e + (x - it.x0) / (it.x1 - it.x0) * (W - m.e - m.d);
+  const py = y => H - m.b - (y - it.y0) / (it.y1 - it.y0) * (H - m.t - m.b);
+  const lim = y => Math.max(it.y0, Math.min(it.y1, y));
+  const linhas = it.linhas.map(l => {
+    const ya = l.a * it.x0 + l.b, yb = l.a * it.x1 + l.b;
+    const forte = !escolhida || escolhida === l.k;
+    return `<g opacity="${forte ? 1 : .25}"><line x1="${px(it.x0)}" y1="${py(lim(ya))}" x2="${px(it.x1)}" y2="${py(lim(yb))}" stroke="${l.cor}" stroke-width="${escolhida === l.k ? 4 : 3}" stroke-linecap="round"/><text x="${px(it.x1) + 6}" y="${py(lim(yb)) + 5}" fill="${l.cor}" font-weight="800" font-size="15">${l.k}</text></g>`;
+  }).join("");
+  const pontos = it.pontos.map(([x, y]) => `<circle cx="${px(x)}" cy="${py(y)}" r="5.5" fill="#12324a"/>`).join("");
+  let novo = "";
+  if (escolhida) {
+    const l = it.linhas.find(x => x.k === escolhida), prev = lim(l.a * it.novoX + l.b);
+    novo = `<line x1="${px(it.novoX)}" y1="${py(it.y0)}" x2="${px(it.novoX)}" y2="${py(it.y1)}" stroke="#4a6578" stroke-dasharray="4 4"/>
+      <circle cx="${px(it.novoX)}" cy="${py(prev)}" r="7" fill="${l.cor}" stroke="#fff" stroke-width="2"/>
+      <path d="M${px(it.novoX) - 6} ${py(it.real) - 6} l12 12 m0 -12 l-12 12" stroke="#0f9d58" stroke-width="3"/>`;
+  }
+  const ticksX = [20, 25, 30, 35].map(x => `<text x="${px(x)}" y="${H - m.b + 16}" text-anchor="middle" font-size="11" fill="#4a6578">${x}</text>`).join("");
+  const ticksY = [0, 25, 50].map(y => `<text x="${m.e - 6}" y="${py(y) + 4}" text-anchor="end" font-size="11" fill="#4a6578">${y}</text>`).join("");
+  return `<svg class="grafico" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(it.eixoY)} por ${esc(it.eixoX)}">
+    <line x1="${m.e}" y1="${py(it.y0)}" x2="${W - m.d}" y2="${py(it.y0)}" stroke="#cfe3f2" stroke-width="2"/>
+    <line x1="${m.e}" y1="${py(it.y0)}" x2="${m.e}" y2="${m.t}" stroke="#cfe3f2" stroke-width="2"/>
+    ${ticksX}${ticksY}${linhas}${pontos}${novo}
+  </svg>
+  <p class="eixos suave"><span>↔ ${esc(it.eixoX)}</span><span>↕ ${esc(it.eixoY)}</span></p>`;
+}
+function corpoLinha(r) {
+  return `
+      <div class="item pula"><div class="figura" aria-hidden="true">🍦</div><div class="contexto">A IA que prevê</div><h2>${esc(r.it.q)}</h2></div>
+      <div id="grafico">${graficoLinha(r.it)}</div>
+      <div class="linhas-op" role="group" aria-label="Escolha a linha">${r.it.linhas.map(l => `<button data-l="${l.k}" style="border-color:${l.cor};color:${l.cor}">Linha ${l.k}</button>`).join("")}</div>`;
+}
+function ligarLinha(r) {
+  document.querySelectorAll(".linhas-op button").forEach(b => b.onclick = () => {
+    if (estado.respondido) return;
+    const it = r.it, l = it.linhas.find(x => x.k === b.dataset.l);
+    const prev = Math.round(l.a * it.novoX + l.b);
+    document.querySelectorAll(".linhas-op button").forEach(x => { x.disabled = true; x.classList.toggle("marcada", x === b); });
+    document.getElementById("grafico").innerHTML = graficoLinha(it, l.k);
+    const extra = `<p class="centro">A linha ${l.k} previu <b>${prev} ${esc(it.unidade)}</b> para ${it.novoX} °C. A sorveteria vendeu <b>${it.real}</b> (✖ verde no gráfico).</p>`;
+    const msg = l.a <= 0
+      ? `A linha ${l.k} ${l.a === 0 ? "fica reta, como se o calor não mudasse nada" : "desce, como se o calor diminuísse as vendas"}. Mas os pontinhos mostram o contrário: quanto mais calor, mais sorvete. A linha que sobe junto com eles é a <b>${esc(it.certo)}</b>.`
+      : `Essa linha não acompanha os pontinhos. A melhor é a <b>${esc(it.certo)}</b>.`;
+    responder(l.k === it.certo, { extra, msg });
+  });
+}
+
+/* ---------- Nível 4: a IA enxerga números (pixels) ----------
+   A criança lê a matriz de 0 e 1 e pinta a grade. Acerta quando a grade fica igual à matriz. */
+function corpoPixel(r) {
+  r.pint = r.pint || new Set();
+  const n = r.it.alvo[0].length;
+  return `
+      <div class="item pula"><div class="contexto">Imagem é número</div><h2>${esc(r.it.q)}</h2></div>
+      <div class="pixel-par">
+        <div><small class="suave">O que a IA recebe</small><div class="numeros" style="grid-template-columns:repeat(${n},1fr)">${r.it.alvo.join("").split("").map(c => `<span class="${c === "1" ? "um" : ""}">${c}</span>`).join("")}</div></div>
+        <div><small class="suave">Pinte aqui</small><div class="pixels" id="pixels" style="grid-template-columns:repeat(${n},1fr)">${r.it.alvo.join("").split("").map((c, i) => `<button class="px" data-i="${i}" aria-label="Quadradinho ${Math.floor(i / n) + 1}-${i % n + 1}" aria-pressed="${r.pint.has(i)}"></button>`).join("")}</div></div>
+      </div>
+      <button class="btn" id="conferir-pixel" style="width:100%">Conferir a imagem</button>`;
+}
+function ligarPixel(r) {
+  document.querySelectorAll("#pixels .px").forEach(b => b.onclick = () => {
+    if (estado.respondido) return;
+    const i = Number(b.dataset.i);
+    if (r.pint.has(i)) r.pint.delete(i); else r.pint.add(i);
+    b.setAttribute("aria-pressed", r.pint.has(i));
+  });
+  document.getElementById("conferir-pixel").onclick = () => {
+    if (estado.respondido) return;
+    const alvo = r.it.alvo.join("").split("");
+    let certos = 0;
+    document.querySelectorAll("#pixels .px").forEach(b => {
+      const i = Number(b.dataset.i), ok = (alvo[i] === "1") === r.pint.has(i);
+      if (ok) certos++; else b.classList.add("erro");
+      b.disabled = true;
+    });
+    document.getElementById("conferir-pixel").disabled = true;
+    const ok = certos === alvo.length;
+    const extra = `<p class="centro"><b>${ok ? `Você desenhou ${esc(r.it.nome)}!` : `${certos} de ${alvo.length} quadradinhos certos. Era ${esc(r.it.nome)}.`}</b></p>`;
+    const msg = "Os quadradinhos em vermelho não batem com os números. Lembre: <b>1</b> é pintado e <b>0</b> fica vazio, linha por linha.";
+    responder(ok, { extra, msg });
+  };
 }
 
 function avancar() {
@@ -1265,15 +1737,16 @@ function telaTesteIA(r) {
   };
   const linhas = r.testes.map(t => { const p = prever(t.m); return { ...t, p, ok: p === (t.m ? "b" : "a") }; });
   const acertosIA = linhas.filter(l => l.ok).length;
+  const rot = r.rotulos || { a: "😋 Boa", b: "🤢 Estragada" };
   const fala = acertosIA === linhas.length
-    ? "Você treinou muito bem! A IA <b>nunca tinha visto essas frutas</b> e acertou todas, porque aprendeu com os seus exemplos."
-    : "A IA errou algumas porque <b>aprendeu com exemplos errados</b>. Uma IA só é tão boa quanto os dados que recebe.";
+    ? (r.falas ? r.falas.ok : "Você treinou muito bem! A IA <b>nunca tinha visto essas frutas</b> e acertou todas, porque aprendeu com os seus exemplos.")
+    : (r.falas ? r.falas.erro : "A IA errou algumas porque <b>aprendeu com exemplos errados</b>. Uma IA só é tão boa quanto os dados que recebe.");
   app.innerHTML = topo(tagFase()) + `
   <section class="cartao pula">
     <h2>Hora do teste da IA</h2>
     ${bia(fala)}
     <ul class="teste">
-      ${linhas.map(l => `<li><span class="f" aria-hidden="true">${l.fig}</span><span>${esc(l.q)}<br><small class="suave">A IA disse: <b>${l.p === "a" ? "😋 Boa" : l.p === "b" ? "🤢 Estragada" : "🤷 Não sei"}</b></small></span><span class="ok ${l.ok ? "sim" : "nao"}">${l.ok ? "✔ certo" : "✘ errou"}</span></li>`).join("")}
+      ${linhas.map(l => `<li><span class="f" aria-hidden="true">${l.fig}</span><span>${esc(l.q)}<br><small class="suave">A IA disse: <b>${l.p === "a" ? rot.a : l.p === "b" ? rot.b : "🤷 Não sei"}</b></small></span><span class="ok ${l.ok ? "sim" : "nao"}">${l.ok ? "✔ certo" : "✘ errou"}</span></li>`).join("")}
     </ul>
     <p class="centro"><b>A IA acertou ${acertosIA} de ${linhas.length}.</b></p>
     <button class="btn" id="seguir">Continuar</button>
@@ -1359,7 +1832,8 @@ function telaCertificado() {
   const descricao = {
     1: "aprendendo a reconhecer, usar e questionar a inteligência artificial com segurança e responsabilidade.",
     2: "aprendendo a criar com IA de forma honesta, programar um robô, entender a IA na cidade, no campo e no trabalho e usar a IA com equilíbrio e pensamento crítico.",
-    3: "aprendendo como a IA funciona por dentro, pensando como programador, protegendo-se de deepfakes e rastros digitais, usando a IA na saúde e no planeta com responsabilidade, conhecendo seus direitos digitais e criando um projeto do bem."
+    3: "aprendendo como a IA funciona por dentro, pensando como programador, protegendo-se de deepfakes e rastros digitais, usando a IA na saúde e no planeta com responsabilidade, conhecendo seus direitos digitais e criando um projeto do bem.",
+    4: "montando pedidos completos para a IA, treinando um caçador de golpes, criando árvores de decisão, fazendo previsões com dados, programando com repetição, entendendo como a IA enxerga imagens, criando um chatbot do bem e pensando nos dilemas da IA."
   }[T.id];
   const data = new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
   app.innerHTML = topo("Certificado") + `
