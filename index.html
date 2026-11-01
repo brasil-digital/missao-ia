@@ -176,7 +176,8 @@ footer.pais b { color: var(--tinta); }
 .selo-logo img { width: 100%; height: auto; display: block; }
 footer.pais a { color: var(--azul); font-weight: 800; }
 /* Níveis (abas do mapa) */
-.niveis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+.niveis { display: flex; gap: 5px; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+.niveis .nivel-aba { flex: 0 0 auto; min-width: 78px; scroll-snap-align: start; position: relative; }
 @media (max-width: 420px) { .nivel-aba { font-size: .8rem; padding: 7px 2px; border-width: 2px; } .nivel-aba small { font-size: .64rem; } }
 .nivel-aba { background: var(--cartao); color: var(--tinta); border: 3px solid var(--linha); border-radius: 16px; padding: 8px 6px; font-weight: 800; line-height: 1.15; display: grid; gap: 2px; justify-items: center; text-align: center; font-size: .92rem; }
 .nivel-aba small { font-weight: 600; color: var(--tinta-suave); font-size: .78rem; }
@@ -1024,6 +1025,182 @@ const FASES_N4 = [
   }
 ];
 
+const FASES_N5 = [
+  {
+    id: 51, nome: "Programe o drone", resumo: "Leve o remédio até a casa da vovó",
+    intro: {
+      k: "Drones de entrega voam sozinhos seguindo um <b>programa</b>. A vovó precisa de um remédio! Programe o drone para desviar dos prédios e chegar na casa dela. Use o <b>🔁 Repetir 3×</b> para economizar comandos.",
+      t: "Drones autônomos seguem <b>rotas programadas</b> e corrigem o caminho com sensores. Monte o programa para o drone desviar dos prédios e entregar o remédio, com <b>limite de comandos</b>: use o laço <b>🔁 Repetir 3×</b>."
+    },
+    regras: [["🚁 Drone", "Anda e vira como o robô do labirinto."], ["🏢 Prédio", "Bateu, o voo falha: é um bug!"]],
+    blocos: [
+      { tipo: "seq", loop: true, max: 8, dir: 0, ator: "🚁", alvo: "🏠", parede: "🏢", quem: "drone", alvoNome: "na casa da vovó", ctx: "Programe o drone",
+        mapa: ["R...#", "###.#", "B...#"],
+        q: "Entrega 1: leve o remédio até a casa da vovó usando no máximo 8 comandos.",
+        e: "Entregue! O drone desviou dos prédios e a vovó recebeu o remédio. 💊",
+        t: "Entregue. Rota curta, sem colisão e dentro do limite de comandos." },
+      { tipo: "seq", loop: true, max: 13, dir: 0, ator: "🚁", alvo: "🏠", parede: "🏢", quem: "drone", alvoNome: "na casa da vovó", ctx: "Programe o drone",
+        mapa: ["R....", "####.", ".....", ".####", "B...."],
+        q: "Entrega 2: a cidade cresceu! Faça o zigue-zague com no máximo 13 comandos.",
+        e: "Mandou bem! Você programou uma rota comprida, como os drones de entrega de verdade.",
+        t: "Mandou bem. Rotas longas ficam curtas com laços: é assim que se programa robôs e drones." },
+      { tipo: "mc", itens: [
+        { q: "Durante o voo, um passarinho entra na frente do drone. O que o drone precisa ter?", o: ["Sensores para perceber o obstáculo e desviar", "Uma buzina bem alta", "Nada, ele segue o programa e pronto"], certa: 0, e: "Isso! O programa dá a rota, e os sensores ajudam a desviar do inesperado.", t: "Isso. Robôs autônomos combinam o plano (programa) com a percepção (sensores) para reagir a imprevistos." },
+        { q: "Por que um drone de entrega precisa de pessoas cuidando dele?", o: ["Para conferir a rota, a segurança e resolver problemas", "Não precisa de ninguém", "Só para pintar o drone"], certa: 0, e: "Isso! Por trás de todo drone tem gente responsável.", t: "Isso. Supervisão humana, regras de voo e manutenção fazem parte de qualquer operação com drones." }
+      ] }
+    ]
+  },
+  {
+    id: 52, nome: "Os sentidos do robô", resumo: "Escolha o sensor certo para cada robô",
+    intro: {
+      k: "Robôs não têm olhos e ouvidos como a gente: eles têm <b>sensores</b>! Todo robô faz 3 coisas: <b>sente</b> (sensores), <b>pensa</b> (a IA) e <b>age</b> (motores). Escolha o sensor certo para cada missão.",
+      t: "Todo robô funciona no ciclo <b>sentir → pensar → agir</b>. Sensores (câmera, microfone, GPS, distância, presença) captam dados, a IA decide e os motores executam. Escolher o sensor certo é o primeiro passo de qualquer projeto."
+    },
+    regras: [["👀 Sentir", "Sensores captam o mundo."], ["🧠 Pensar e agir", "A IA decide, os motores fazem."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "🧹 O robô aspirador não pode cair da escada. Qual sensor ajuda?", o: ["Sensor de distância olhando para o chão", "Microfone", "Termômetro"], certa: 0, e: "Isso! Ele percebe que o chão \"sumiu\" e para antes de cair.", t: "Isso. Sensores de queda (infravermelho apontado para baixo) medem a distância até o chão." },
+      { q: "🚗 O carro autônomo precisa ler a placa de PARE. Qual sensor?", o: ["Câmera", "Balança", "Microfone"], certa: 0, e: "Isso! A câmera vê a placa e a IA reconhece o que está escrito.", t: "Isso. Visão computacional analisa as imagens da câmera para reconhecer placas, faixas e pessoas." },
+      { q: "🗣️ O assistente de voz precisa entender o que você fala. Qual sensor?", o: ["Microfone", "GPS", "Sensor de chuva"], certa: 0, e: "Isso! O microfone capta a voz e a IA transforma em texto.", t: "Isso. Reconhecimento de fala transforma o som captado pelo microfone em texto." },
+      { q: "🚁 O drone precisa saber onde está no mapa. Qual sensor?", o: ["GPS", "Câmera de selfie", "Termômetro"], certa: 0, e: "Isso! O GPS diz a posição do drone usando satélites.", t: "Isso. O GPS calcula a posição pelos sinais de satélites, e outros sensores ajudam a manter o equilíbrio." },
+      { q: "🚪 A porta do mercado abre sozinha quando alguém chega. Qual sensor?", o: ["Sensor de presença (movimento)", "Microfone", "Balança"], certa: 0, e: "Isso! Ele percebe o movimento e manda a porta abrir.", t: "Isso. Sensores de presença detectam movimento ou calor e acionam o motor da porta." }
+    ] }]
+  },
+  {
+    id: 53, nome: "Carro autônomo", resumo: "Decida quando o carro segue ou para",
+    intro: {
+      k: "Carros autônomos dirigem sozinhos com câmeras e sensores. Mas quem ensina as regras é gente! Para cada situação, decida: o carro <b>segue</b> ou <b>para</b>? Lembre: na dúvida, segurança primeiro.",
+      t: "Carros autônomos tomam decisões a cada fração de segundo a partir dos sensores. As regras priorizam a <b>segurança das pessoas</b>, e quando o sistema <b>não tem certeza</b>, a decisão segura é reduzir e parar. Decida cada caso."
+    },
+    regras: [["🟢 Seguir", "Caminho livre e seguro."], ["🛑 Parar", "Gente, perigo ou dúvida."]],
+    blocos: [
+      { tipo: "bin", n: 8, ctx: "O carro autônomo vê:", a: ["🟢 Seguir", "pode ir"], b: ["🛑 Parar", "freia"], itens: [
+        { c: "a", fig: "🟢", q: "Sinal verde e a rua está livre", e: "Seguir! Sinal verde e ninguém na frente." },
+        { c: "b", fig: "🚶", q: "Uma pessoa atravessando na faixa", e: "Parar! Pedestre na faixa tem a vez." },
+        { c: "b", fig: "⚽", q: "Uma bola rolando para a rua", e: "Parar! Atrás de uma bola pode vir uma criança correndo.", t: "Parar. Um bom sistema prevê riscos: a bola indica que uma criança pode aparecer." },
+        { c: "b", fig: "🔴", q: "Sinal vermelho", e: "Parar! Vermelho é para todo mundo, até para robô." },
+        { c: "b", fig: "🌫️", q: "Neblina forte: a câmera quase não enxerga", e: "Parar! Se a IA não tem certeza do que vê, o seguro é reduzir e parar.", t: "Parar. Quando os sensores perdem a confiança, o carro deve ir para um modo seguro e pedir ajuda humana." },
+        { c: "a", fig: "👮", q: "Um agente de trânsito faz sinal para seguir", e: "Seguir! O agente de trânsito comanda o cruzamento." },
+        { c: "b", fig: "🚑", q: "Ambulância com sirene vindo no cruzamento", e: "Parar! Ambulância em emergência tem preferência." },
+        { c: "a", fig: "🛣️", q: "Estrada livre, dia claro, dentro da velocidade", e: "Seguir! Tudo certo e seguro." },
+        { c: "b", fig: "🐕", q: "Um cachorro parado no meio da rua", e: "Parar! O carro espera o bichinho sair." }
+      ] },
+      { tipo: "mc", itens: [
+        { q: "Quando a IA do carro não tem certeza do que está vendo, o mais seguro é...", o: ["Acelerar para passar logo", "Reduzir, parar e chamar uma pessoa", "Fechar os olhos"], certa: 1, e: "Isso! Na dúvida, segurança primeiro.", t: "Isso. Sistemas seguros têm um \"modo de falha segura\" e passam o controle para humanos." },
+        { q: "Quem ensina as regras para o carro autônomo?", o: ["Ninguém, ele nasce sabendo", "Engenheiros, com as leis de trânsito e milhões de exemplos", "O passageiro, gritando"], certa: 1, e: "Isso! Gente de verdade escreve as regras e treina a IA.", t: "Isso. O sistema mistura regras (leis de trânsito) com modelos treinados em muitos dados, e tudo é testado por pessoas." }
+      ] }
+    ]
+  },
+  {
+    id: 54, nome: "Treine o robô aspirador", resumo: "Ensine com recompensas",
+    intro: {
+      k: "Tem IA que aprende como um bichinho de estimação: ganha <b>👍 recompensa</b> quando acerta e <b>fica sem</b> quando erra. Você é o treinador do robô aspirador! Depois ele vai decidir sozinho em situações novas.",
+      t: "No <b>aprendizado por reforço</b>, a IA tenta ações e recebe <b>recompensas</b> ou não. Com o tempo, ela repete o que deu recompensa e evita o resto. Você vai dar as recompensas. Depois o robô age sozinho em casos novos."
+    },
+    regras: [["👍 Recompensa", "Ação boa: faça de novo."], ["👎 Sem recompensa", "Ação ruim: evite."]],
+    blocos: [
+      { tipo: "bin", n: 6, ordemFixa: true, treino: true, ctx: "O robô aspirador fez:", a: ["👍 Recompensa", "faça de novo"], b: ["👎 Sem recompensa", "evite"], itens: [
+        { c: "a", m: 0, fig: "🧹", q: "Aspirou a sujeira debaixo do sofá", e: "Recompensa! Você ensinou: limpar a sujeira é bom." },
+        { c: "b", m: 1, fig: "🧦", q: "Engoliu uma meia que estava no chão", e: "Sem recompensa! Você ensinou: engolir coisas que não são sujeira é ruim." },
+        { c: "a", m: 0, fig: "🪜", q: "Parou na beira da escada", e: "Recompensa! Parar antes de cair é muito esperto." },
+        { c: "b", m: 1, fig: "💦", q: "Passou na água do cachorro e espalhou tudo", e: "Sem recompensa! Molhar a casa não é limpar." },
+        { c: "b", m: 1, fig: "🐱", q: "Correu atrás do gato", e: "Sem recompensa! O gato não é sujeira. 😹" },
+        { c: "a", m: 0, fig: "🔌", q: "Voltou para a base quando a bateria ficou fraca", e: "Recompensa! Pronto: o robô já tem 6 lições suas." }
+      ] },
+      { tipo: "testeIA", rotulos: { a: "👍 Vai fazer", b: "🚫 Vai evitar" },
+        falas: { ok: "Que treinador! O robô <b>nunca tinha visto essas situações</b> e decidiu certo em todas, porque aprendeu com as suas recompensas.",
+                 erro: "O robô decidiu errado em algumas porque <b>ganhou recompensa na hora errada</b>. No aprendizado por reforço, a IA repete o que foi premiado, até o que é errado." },
+        testes: [
+          { m: 0, fig: "🍪", q: "Migalhas de biscoito no tapete" },
+          { m: 1, fig: "🔌", q: "Puxar o fio do carregador do celular" },
+          { m: 0, fig: "🧸", q: "Desviar do brinquedo e limpar em volta" },
+          { m: 1, fig: "🪴", q: "Empurrar o vaso de planta" }
+        ] },
+      { tipo: "mc", itens: [
+        { q: "Como aprende uma IA treinada com recompensas?", o: ["Ela repete o que ganhou recompensa e evita o resto", "Ela lê um livro", "Ela não aprende nada"], certa: 0, e: "Isso! Igual treinar um bichinho com petisco.", t: "Isso. É o aprendizado por reforço: tentativa, recompensa e ajuste, muitas e muitas vezes." },
+        { q: "Se você der recompensa quando o robô engole meia, o que acontece?", o: ["Ele aprende a engolir mais meias", "Ele fica mais limpo", "Nada muda"], certa: 0, e: "Isso! A IA aprende exatamente o que foi premiado.", t: "Isso. Recompensa mal pensada gera comportamento errado. Por isso quem cria a IA precisa definir bem o que é \"acertar\"." }
+      ] }
+    ]
+  },
+  {
+    id: 55, nome: "GPS esperto", resumo: "Ache a rota mais rápida",
+    intro: {
+      k: "O GPS é uma IA que <b>soma os minutos</b> de cada rua para achar o caminho mais rápido. E quando chove ou tem trânsito, ele <b>recalcula</b>! Faça as contas e seja mais esperto que o GPS.",
+      t: "Aplicativos de rota modelam a cidade como um <b>grafo</b>: cada rua tem um custo (tempo). O algoritmo procura o caminho de <b>menor custo</b> e recalcula quando chegam dados novos, como trânsito e alagamentos."
+    },
+    regras: [["➕ Some", "Os minutos de cada trecho."], ["🔄 Recalcule", "Quando algo muda na cidade."]],
+    blocos: [{ tipo: "mc", ordemFixa: true, itens: [
+      { q: "🏠 ➜ 🏫 Qual rota chega mais rápido na escola?", o: ["🟠 Rota A: 5 + 5 + 5 minutos", "🔵 Rota B: 4 + 12 minutos", "🟣 Rota C: 3 + 3 + 3 + 3 minutos"], certa: 2, e: "Isso! A: 15, B: 16 e C: 12 minutos. A Rota C ganha, mesmo tendo mais ruas.", t: "Isso. A=15, B=16, C=12. Mais trechos não significa mais tempo: o que conta é a soma dos custos." },
+      { q: "🌧️ Choveu e uma rua da Rota C alagou: ela ganhou +10 minutos. E agora, qual é a mais rápida?", o: ["🟠 Rota A: 5 + 5 + 5 minutos", "🔵 Rota B: 4 + 12 minutos", "🟣 Rota C: 3 + 3 + 13 + 3 minutos"], certa: 0, e: "Isso! Agora C dá 22 minutos. A Rota A, com 15, virou a melhor. O GPS recalcula igualzinho!", t: "Isso. C passou a 22, então A (15) vira o menor custo. Dados novos mudam a melhor resposta." },
+      { q: "Como o GPS descobre que uma rua está com trânsito?", o: ["Celulares de muitas pessoas mostram que ali todo mundo está andando devagar", "Ele adivinha", "Um satélite conta os carros um por um"], certa: 0, e: "Isso! Os dados de muita gente juntos mostram onde está lento.", t: "Isso. Dados de localização de muitos aparelhos, de forma agregada e anônima, mostram a velocidade em cada rua." },
+      { q: "O GPS mandou entrar numa rua que está fechada com placa. O que fazer?", o: ["Entrar mesmo assim, o GPS sabe tudo", "Obedecer a placa: o GPS pode estar desatualizado", "Desligar o carro e ir embora"], certa: 1, e: "Isso! A IA pode errar. A placa e o bom senso vêm primeiro.", t: "Isso. Mapas desatualizados acontecem. A sinalização e o julgamento humano valem mais que a sugestão do app." }
+    ] }]
+  },
+  {
+    id: 56, nome: "IA na cidade", resumo: "Ajuda as pessoas ou vigia demais?",
+    intro: {
+      k: "As cidades estão ficando <b>inteligentes</b>: semáforos, ônibus e lixeiras com IA. Muita coisa ajuda as pessoas, mas algumas <b>vigiam demais</b> e invadem a privacidade. Você decide cada caso!",
+      t: "Cidades inteligentes usam sensores e IA para melhorar serviços. Mas há limites: <b>vigilância em massa</b>, uso de dados sem consentimento e decisões automáticas <b>sem revisão humana</b> podem ferir direitos. Avalie cada caso."
+    },
+    regras: [["🤝 Ajuda", "Melhora a cidade e respeita as pessoas."], ["👀 Vigia demais", "Invade a privacidade ou decide sozinha."]],
+    blocos: [
+      { tipo: "bin", n: 8, ctx: "Na cidade inteligente:", a: ["🤝 Ajuda", "bom uso"], b: ["👀 Vigia demais", "precisa de cuidado"], itens: [
+        { c: "a", fig: "🚦", q: "Semáforo que muda o tempo conforme o trânsito", e: "Ajuda! Menos fila e menos poluição." },
+        { c: "a", fig: "🗑️", q: "Lixeira que avisa quando está cheia", e: "Ajuda! O caminhão vai só onde precisa." },
+        { c: "a", fig: "🚌", q: "Ponto de ônibus que mostra quanto falta para o ônibus chegar", e: "Ajuda! Ninguém fica esperando à toa." },
+        { c: "b", fig: "📷", q: "Câmera que reconhece o rosto de todo mundo na praça e guarda para sempre", e: "Vigia demais! Guardar o rosto de todos, sem motivo, invade a privacidade.", t: "Vigia demais. Reconhecimento facial em massa e guarda sem prazo ferem a privacidade e podem errar com pessoas inocentes." },
+        { c: "b", fig: "📍", q: "App da cidade que vende a sua localização sem você saber", e: "Vigia demais! Seus dados são seus.", t: "Vigia demais. Compartilhar dados pessoais sem consentimento contraria a LGPD." },
+        { c: "a", fig: "💡", q: "Poste que acende mais forte só quando passa gente", e: "Ajuda! Economiza energia e mantém a rua iluminada." },
+        { c: "b", fig: "🚁", q: "Drone filmando dentro das janelas das casas", e: "Vigia demais! A casa das pessoas é privada." },
+        { c: "b", fig: "🏥", q: "IA que nega atendimento no posto de saúde sem nenhuma pessoa revisar", e: "Vigia demais! Decisão importante precisa de gente conferindo.", t: "Precisa de cuidado. Decisões que afetam direitos exigem revisão humana e um jeito de contestar." },
+        { c: "a", fig: "🌊", q: "Sensor no rio que avisa a Defesa Civil quando a água sobe", e: "Ajuda! Avisar cedo salva vidas." }
+      ] },
+      { tipo: "mc", itens: [
+        { q: "O que deixa uma cidade inteligente boa para todos?", o: ["Usar IA para ajudar, com regras claras e respeito à privacidade", "Filmar tudo o tempo todo", "Deixar a IA decidir tudo sozinha"], certa: 0, e: "Isso! Tecnologia a serviço das pessoas.", t: "Isso. Transparência, finalidade clara, proteção de dados e participação dos moradores." },
+        { q: "Você teve uma ideia de IA para o seu bairro. Qual é a melhor primeira pergunta?", o: ["Isso ajuda as pessoas sem tirar a privacidade delas?", "Quanto dá para vigiar?", "Qual é a cor do robô?"], certa: 0, e: "Isso! Pensar nas pessoas primeiro é coisa de piloto do futuro.", t: "Isso. Avaliar benefícios e riscos antes de criar é o começo de uma IA responsável." }
+      ] }
+    ]
+  },
+  {
+    id: 57, nome: "Drone com responsabilidade", resumo: "Regras para voar com segurança",
+    intro: {
+      k: "Pilotar drone é muito legal, mas tem <b>regras</b>! Elas protegem as pessoas, os aviões e a privacidade de todo mundo. Mostre que você é um piloto responsável.",
+      t: "No Brasil, o uso de drones segue regras da <b>ANAC</b> e do <b>DECEA</b>: não voar perto de aeroportos nem sobre pessoas, manter o drone à vista e respeitar a privacidade. Drones maiores precisam de cadastro. Escolha a atitude responsável."
+    },
+    regras: [["✈️ Segurança", "Longe de aeroportos e de pessoas."], ["🙋 Respeito", "Sem filmar ninguém sem permissão."]],
+    blocos: [{ tipo: "mc", itens: [
+      { q: "Você quer voar o drone perto do aeroporto para ver os aviões. Pode?", o: ["Pode, é só subir bem alto", "Não! Perto de aeroporto é proibido e perigoso", "Pode, se for de noite"], certa: 1, e: "Isso! Drone perto de avião pode causar um acidente grave.", t: "Isso. As áreas próximas de aeroportos são restritas: o drone pode atingir uma aeronave." },
+      { q: "Os vizinhos estão na piscina. Você pode filmar com o drone?", o: ["Pode, o céu é de todos", "Não, sem a permissão deles é invasão de privacidade", "Pode, se postar só nos stories"], certa: 1, e: "Isso! Filmar alguém sem permissão desrespeita a privacidade.", t: "Isso. Imagem é um direito da pessoa. Filmar e publicar sem autorização pode gerar problemas legais." },
+      { q: "Onde é o melhor lugar para treinar com o drone?", o: ["Num campo aberto, longe de pessoas, com um adulto junto", "Em cima de um show lotado", "Dentro do shopping"], certa: 0, e: "Isso! Espaço aberto e um adulto por perto.", t: "Isso. Áreas abertas, sem multidões, com supervisão e o drone sempre à vista." },
+      { q: "A bateria do drone está acabando e ele está longe. O que fazer?", o: ["Continuar voando até apagar", "Trazer de volta com calma e pousar num lugar seguro", "Soltar o controle"], certa: 1, e: "Isso! Piloto bom planeja a volta antes da bateria acabar.", t: "Isso. Planejar a autonomia e o pouso faz parte do voo seguro, e muitos drones já voltam sozinhos para a base." }
+    ] }]
+  },
+  {
+    id: 58, nome: "Profissões do futuro", resumo: "O que a IA faz e o que precisa de gente",
+    intro: {
+      k: "A IA vai mudar muitas profissões! Ela é ótima em tarefas <b>repetitivas e com muitos dados</b>. Mas <b>cuidar, decidir e ter empatia</b> continuam sendo coisa de gente. Separe cada tarefa.",
+      t: "A IA <b>automatiza tarefas</b>, não profissões inteiras. Ela é forte em padrões e volume de dados. Já julgamento, empatia, criatividade com propósito e responsabilidade seguem humanos. O futuro é <b>pessoas + IA</b>."
+    },
+    regras: [["🤖 A IA ajuda bem", "Tarefa repetitiva ou de dados."], ["🧑 Precisa de gente", "Cuidado, decisão e empatia."]],
+    blocos: [
+      { tipo: "bin", n: 8, ctx: "Essa tarefa:", a: ["🤖 A IA ajuda bem", "repetitiva ou de dados"], b: ["🧑 Precisa de gente", "cuidado e decisão"], itens: [
+        { c: "a", fig: "🖼️", q: "Separar milhares de fotos por assunto", e: "A IA ajuda bem! Ela organiza fotos rapidinho." },
+        { c: "b", fig: "🤗", q: "Consolar um amigo que está triste", e: "Precisa de gente! Abraço e empatia são humanos." },
+        { c: "a", fig: "🌐", q: "Traduzir o cardápio de um restaurante", e: "A IA ajuda bem! Tradução é um ótimo uso." },
+        { c: "b", fig: "🩺", q: "Decidir o tratamento de um paciente", e: "Precisa de gente! A IA ajuda o médico, mas quem decide é o médico, junto com o paciente.", t: "Precisa de gente. A IA apoia o diagnóstico, mas a decisão e a responsabilidade são do profissional." },
+        { c: "a", fig: "📝", q: "Achar erros de digitação num texto", e: "A IA ajuda bem! Revisar ortografia é com ela." },
+        { c: "b", fig: "👩‍🏫", q: "Ensinar e cuidar de uma turma de crianças", e: "Precisa de gente! Professor inspira, cuida e conhece cada aluno." },
+        { c: "a", fig: "🌽", q: "Prever a colheita usando dados de chuva", e: "A IA ajuda bem! Ela é ótima com muitos dados." },
+        { c: "b", fig: "⚖️", q: "Decidir quem tem razão numa briga entre vizinhos", e: "Precisa de gente! Justiça precisa de escuta e responsabilidade." },
+        { c: "a", fig: "📦", q: "Organizar o estoque de um mercado", e: "A IA ajuda bem! Ela conta e prevê o que vai faltar." }
+      ] },
+      { tipo: "mc", itens: [
+        { q: "A IA vai acabar com todos os empregos?", o: ["Sim, todos", "Não: muitas tarefas mudam, surgem profissões novas e quem sabe usar IA sai na frente", "A IA não muda nada"], certa: 1, e: "Isso! O futuro é gente que sabe trabalhar junto com a IA.", t: "Isso. A IA transforma tarefas e cria funções novas. Habilidades humanas somadas ao uso da IA são o diferencial." },
+        { q: "Qual habilidade vai ser ainda mais importante com a IA?", o: ["Pensar com cuidado, conferir informações e trabalhar em equipe", "Copiar respostas prontas", "Não aprender mais nada"], certa: 0, e: "Isso! Pensar, conferir e colaborar nunca saem de moda.", t: "Isso. Pensamento crítico, checagem de fontes, colaboração e ética são as bases para usar bem a IA." }
+      ] }
+    ]
+  }
+];
+
 const MISSOES_MES = [
   {
     id: 101, mes: "Novembro 2026", selo: "👁️", nome: "IA que vê e conversa", resumo: "Missão de novembro: câmera, voz e cuidado",
@@ -1066,6 +1243,11 @@ const TRILHAS = {
        chefePorFase: { 41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1, 47: 3, 48: 3 },
        chamada: "montar o pedido perfeito, treinar um caçador de golpes, árvore de decisão, previsões com dados, programar com repetição, pixels e um chatbot do bem.",
        boasVindas: "Bem-vindo ao <b>Nível 4 · Inventores</b>! Agora é mão na massa: você vai montar, treinar, programar e testar a IA." },
+  5: { id: 5, tipo: "nivel", nome: "Nível 5", tema: "Pilotos do Futuro", fases: FASES_N5,
+       chefe: { id: 59, nome: "Desafio final do Nível 5", resumo: "Mostre que você é um Piloto do Futuro" },
+       chefePorFase: { 51: 1, 52: 2, 53: 2, 54: 1, 55: 1, 56: 2, 57: 2, 58: 1 },
+       chamada: "programar um drone de entrega, sensores, carro autônomo, treinar um robô com recompensas, GPS, cidades inteligentes e as profissões do futuro.",
+       boasVindas: "Bem-vindo ao <b>Nível 5 · Pilotos do Futuro</b>! Agora a IA sai da tela: drones, robôs, carros e a cidade inteira." },
   mes: { id: "mes", tipo: "mes", nome: "Missão do Mês", tema: "Novidades da IA", fases: MISSOES_MES, chefe: null, chefePorFase: {} }
 };
 Object.values(TRILHAS).forEach(T => T.fases.forEach((f, i) => { f.num = i + 1; f.trilha = T.id; }));
@@ -1244,6 +1426,9 @@ function telaMapa() {
   </section>`;
   ligarTopo();
   desenharRobos();
+  // Faixa de níveis rola para o lado: deixa a aba atual à vista (sem mexer na rolagem da página).
+  const abas = app.querySelector(".niveis"), atual = abas && abas.querySelector('[aria-pressed="true"]');
+  if (atual) abas.scrollLeft = Math.max(0, atual.offsetLeft - abas.offsetLeft - (abas.clientWidth - atual.offsetWidth) / 2);
   document.querySelectorAll("[data-fase]").forEach(b => b.onclick = () => abrirFase(Number(b.dataset.fase)));
   document.getElementById("trocar-idade").onclick = () => { estado.tela = "inicio"; render(); };
   document.querySelectorAll("[data-trilha]").forEach(b => b.onclick = () => {
@@ -1335,7 +1520,7 @@ function telaJogo() {
     r.prog = [];
     const cmds = comandosDe(r.it);
     corpo = `
-      <div class="item pula"><div class="contexto">Programe o robô</div><h2>${esc(r.it.q)}</h2></div>
+      <div class="item pula"><div class="contexto">${esc(r.it.ctx || "Programe o robô")}</div><h2>${esc(r.it.q)}</h2></div>
       <div class="labirinto" id="lab" style="grid-template-columns:repeat(${r.it.mapa[0].length},1fr)">${desenharLab(r.it)}</div>
       <div class="programa" id="programa"></div>
       <div class="comandos" id="comandos" style="grid-template-columns:repeat(${cmds.length + 1},1fr)">
@@ -1480,7 +1665,7 @@ function desenharLab(it, pos, dir, rastro = [], bateu = null) {
     const aqui = pos.x === x && pos.y === y;
     const passou = rastro.some(p => p.x === x && p.y === y);
     const cls = ch === "#" ? "parede" : bateu && bateu.x === x && bateu.y === y ? "bateu" : passou ? "rastro" : "";
-    const conteudo = aqui ? `🤖<span class="seta">${SETAS[dir]}</span>` : ch === "#" ? "🧱" : ch === "B" ? "🔋" : "";
+    const conteudo = aqui ? `${it.ator || "🤖"}<span class="seta">${SETAS[dir]}</span>` : ch === "#" ? (it.parede || "🧱") : ch === "B" ? (it.alvo || "🔋") : "";
     return `<div class="cel ${cls}">${conteudo}</div>`;
   }).join("")).join("");
 }
@@ -1513,8 +1698,9 @@ function rodarSeq(r, treino) {
     r.rodando = false;
     lab.innerHTML = desenharLab(it, pos, dir, rastro, bateu);
     const n = passos[i].src + 1;
-    const msg = bateu ? `O robô bateu no comando ${n}. Isso é um <b>bug</b>! Confira para onde ele estava virado antes de andar.`
-      : `O programa acabou e o robô não chegou na bateria. Faltaram passos no caminho.`;
+    const quem = it.quem || "robô", alvo = it.alvoNome || "na bateria";
+    const msg = bateu ? `O ${quem} bateu no comando ${n}. Isso é um <b>bug</b>! Confira para onde ele estava virado antes de andar.`
+      : `O programa acabou e o ${quem} não chegou ${alvo}. Faltaram passos no caminho.`;
     if (treino) {
       document.getElementById("treino-msg").innerHTML = ok ? "<b>Agora deu certo!</b> Você achou e corrigiu o bug. Isso é depurar." : msg + " Tente de novo.";
       document.querySelectorAll("#comandos button, #rodar").forEach(b => { b.disabled = false; });
@@ -1884,7 +2070,10 @@ async function baixarPdf() {
     pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (W - w) / 2, (H - h) / 2, w, h);
     const arq = "Certificado-Missao-IA-Nivel-" + estado.certNivel + "-" + estado.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".pdf";
     if (NO_APP) {
-      window.parent.postMessage({ voa: "pdf", nome: arq, data: pdf.output("datauristring") }, location.origin);
+      // Só entrega para o app Fala Brasil (cópia empacotada, app nativo Android/iOS ou web do app).
+      const msg = { voa: "pdf", nome: arq, data: pdf.output("datauristring") };
+      [location.origin, "https://localhost", "capacitor://localhost", "https://app.falabrasil.digital", "https://fala-brasil-894bf.web.app", "https://fala-brasil-894bf.firebaseapp.com"]
+        .forEach(o => { try { window.parent.postMessage(msg, o); } catch (e) {} });
       st.textContent = "Pronto! Escolha onde salvar ou com quem compartilhar.";
     } else {
       pdf.save(arq);
